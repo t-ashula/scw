@@ -1,0 +1,146 @@
+{
+  "doctype": "<!DOCTYPE html>",
+  "elements": {
+    "attr": [],
+    "child": [{
+      "attr": [],
+      "child": [{
+        "attr": [{
+          "name": "charset",
+          "val": "utf-8"
+        }],
+        "child": [],
+        "name": "meta",
+        "type": "element"
+      }, {
+        "attr": [],
+        "child": [{
+          "type": "text",
+          "val": "hoge"
+        }],
+        "name": "title",
+        "type": "element"
+      }, {
+        "attr": [{
+          "name": "rel",
+          "val": "stylesheet"
+        }, {
+          "name": "href",
+          "val": "style1.css"
+        }],
+        "child": [],
+        "name": "link",
+        "type": "element"
+      }, {
+        "attr": [],
+        "child": [{
+          "type": "text",
+          "val": "body { color: red; } "
+        }],
+        "name": "style",
+        "type": "element"
+      }],
+      "name": "head",
+      "type": "element"
+    }, {
+      "attr": [],
+      "child": [{
+        "attr": [{
+          "name": "id",
+          "val": "a1"
+        }],
+        "child": [{
+          "type": "text",
+          "val": "p1"
+        }],
+        "name": "p",
+        "type": "element"
+      }, {
+        "attr": [{
+          "name": "src",
+          "val": "inframe.html"
+        }],
+        "child": [],
+        "name": "iframe",
+        "type": "element"
+      }, {
+        "attr": [],
+        "child": [{
+          "attr": [{
+            "name": "src",
+            "val": "/qb2.jpg"
+          }, {
+            "name": "alt",
+            "val": "img1"
+          }, {
+            "name": "width",
+            "val": "160"
+          }],
+          "child": [],
+          "name": "img",
+          "type": "element"
+        }],
+        "name": "div",
+        "type": "element"
+      }, {
+        "attr": [],
+        "child": [{
+          "attr": [],
+          "child": [{
+            "type": "text",
+            "val": "pre formated <>\ntest\n"
+          }],
+          "name": "code",
+          "type": "element"
+        }],
+        "name": "pre",
+        "type": "element"
+      }, {
+        "attr": [],
+        "child": [{
+          "attr": [{
+            "name": "src",
+            "val": "src.js"
+          }],
+          "child": [],
+          "name": "script",
+          "type": "element"
+        }, {
+          "attr": [{
+            "name": "src",
+            "val": "iframe2.html"
+          }],
+          "child": [],
+          "name": "iframe",
+          "type": "element"
+        }, {
+          "attr": [],
+          "child": [{
+            "type": "text",
+            "val": "document.write(\"<p id='a2'>p2</p>\")"
+          }],
+          "name": "script",
+          "type": "element"
+        }, {
+          "attr": [{
+            "name": "id",
+            "val": "a2"
+          }],
+          "child": [{
+            "type": "text",
+            "val": "p2"
+          }],
+          "name": "p",
+          "type": "element"
+        }],
+        "name": "code",
+        "type": "element"
+      }],
+      "name": "body",
+      "type": "element"
+    }],
+    "name": "html",
+    "type": "element"
+  },
+  "url": "http://puchi.co/phantom/test.html"
+}
