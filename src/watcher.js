@@ -151,14 +151,56 @@ userAgent.prototype.init = function(){
           a.href = val;
           return a.href;
         }
+
+        function getStyleRule( rule ) {
+          if ( rule.type == 3) {
+            return { 'style' : getStyle( rule.styleSheet ) };
+          } else {
+            return { 'css' : rule.cssText };
+          }
+        }
+        
+        function getStyle( stylesheet ) {
+          var rules = stylesheet.cssRules, rule, i, rjson = [], ret = {};
+          for ( i = 0; rule = rules[ i ]; ++i ) {
+            rjson.push( getStyleRule( rule ) );
+          }
+          ret['rules'] = rjson;
+          for ( i in stylesheet ) if (stylesheet.hasOwnProperty(i)) {
+            if ( i == 'rules' ) continue;
+            if ( i == 'cssRules' ) continue;
+            if ( i.match(/^owner/i) ) continue;
+            if ( i.match(/^parent/i)) continue;
+            ret[i] = stylesheet[i];
+          }
+          return ret;
+        }
+
+        function getStyles( D ) {
+          var i, ss, ssl, ret = [];
+          if ( !D.styleSheets ) {
+          }
+          else {
+            ssl = D.styleSheets;
+            for ( i = 0; ss = ssl[ i ]; ++i ) {
+              ret.push( getStyle( ss ) );
+            }
+          }
+          return ret;
+        }
+        
         var domjson = {
           'url'      : D.location.href,
           'doctype'  : getDoctype( D ),
-          'elements' : getElements( D.documentElement )
+          'elements' : getElements( D.documentElement ),
+          'styles'   : getStyles( D )
         };
         if ( crossFrames && crossFrames.length !== 0 ) {
           domjson['crosses'] = crossFrames;
-        }
+        }/*
+        if ( exResources && exResources.length !== 0 ) {
+          domjson['exresources'] = exResources;
+        }*/
         return domjson;
       }
       return convert(document);
