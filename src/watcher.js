@@ -167,6 +167,6 @@ userAgent.prototype.init = function(){
     phantom.exit();  
   };
 };
-var url = 'http://puchi.co/phantom/test.html';
+var url = 'http://ashula.info';
 var phantomUA = new userAgent( {} );
 phantomUA.run( url );
