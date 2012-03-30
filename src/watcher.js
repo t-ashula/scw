@@ -1,18 +1,37 @@
-var url = 'http://puchi.co/phantom/test.html';
-var page = new WebPage();
-page.onError = function (msg, trace) {
-  console.log(msg);
-  trace.forEach(function(item) {
-    console.log('  ', item.file, ':', item.line);
-  });
-};
-page.open(url, function(status){
-  if ( status !== 'success' ) {
-    console.log('something wrong');
+"use strict";
+function userAgent( opts ) {
+  this.def = {};
+  if ( opts ) {      
+    for( var k in opts ) {
+      this.def[k] = opts[k];
+    }
   }
-  else{
-    var dom = page.evaluate(function(){
-      function convert(D){
+  this.loading = 0;
+  this.dom = {};
+  this.init();
+}
+userAgent.prototype.run = function( url ){
+  this.url = url;
+  this.page.open(this.url);
+} ;
+userAgent.prototype.init = function(){
+  var ua = this;
+  ua.loading = 0;
+  ua.page = new WebPage();
+  ua.page.onLoadStarted = function(){
+    //console.log("onLoadStarted");
+    ua.loading ++;
+  };
+  ua.page.onError = function (msg, trace) {
+    //console.log(msg); trace.forEach(function(item) {  console.log('  ', item.file, ':', item.line);  });
+    ua.loading--;
+    phantom.exit();
+  };
+  ua.page.onLoadFinished = function(status) {
+    //console.log(status + ":" + ua.url);
+    ua.dom = ua.page.evaluate(function(){
+      function convert(D) {
+        var crossFrames = [];
         function getDoctype (D) {
           var doctype = D.doctype, code = '';
           if (doctype) {
@@ -22,13 +41,40 @@ page.open(url, function(status){
           }
           return code;
         }
-
+        function isUriAttribute( tag, aname ){
+          var uriAttrs = {
+            'action'     : ['form'],
+            'background' : ['body'],
+            'cite'       : ['blockquote','q','del','ins'],
+            'classid'    : ['object'],
+            'codebase'   : ['object','applet'],
+            'data'       : ['object'],
+            'formaction' : ['button','input'],
+            'href'       : ['a','area','link','base'],
+            'icon'       : ['command'],
+            'longdesc'   : ['img','frame','iframe'],
+            'manifest'   : ['html'],
+            'poster'     : ['video'],
+            'profile'    : ['head'],            
+            'src'        : ['script','input','frame','iframe','img','video','audio','embed','source','track'],
+            'usemap'     : ['img','input','object']
+          };
+          var attr;
+          tag = tag.toLowerCase();
+          aname = aname.toLowerCase();
+          for (attr in uriAttrs) if (uriAttrs.hasOwnProperty( attr )){
+            if ( aname === attr ){
+              return uriAttrs[attr].some(function(t){ return t === tag; });
+            }
+          }
+          return false;
+        }
         function getElements(E) {
           var TYPE = 'type', NAME = 'name', ATTR = 'attr', CHILD = 'child', VALUE = 'val', ele = {};
           switch (E.nodeType){
            case Node.ELEMENT_NODE:
             ele = (function(E){
-              var children = E.childNodes, child, i, cs = [], c, ele = {};
+              var children = E.childNodes, child, i, cs = [], c, ele = {}, ats;
               if (E.hasChildNodes()){
                 for ( i = 0; child = children[ i ]; ++i ){
                   c = getElements( child ) ;
@@ -38,10 +84,20 @@ page.open(url, function(status){
                   cs.push( c );
                 }
               }
+              if (E.localName.match(/iframe/i)) {
+                try {
+                  ele.inner = convert(E.contentDocument);
+                } catch (x) {
+                  if ( E.src && E.src.match(/^http/i) ) {
+                    crossFrames.push( E.src );                    
+                  }
+                  console.log(x);
+                }
+              }
               ele[TYPE] = 'element';
               ele[NAME] = E.localName;
-              ele[ATTR] = getAttrs( E );
-              ele[CHILD] = cs;
+              if ( (ats = getAttrs( E ) ) && ats.length !== 0) { ele[ATTR] = getAttrs( E ); }
+              if ( cs && cs.length !== 0 ){ ele[CHILD] = cs; }
               return ele;
             })(E);
             break;
@@ -89,58 +145,28 @@ page.open(url, function(status){
           }
           return ret;
         }
-
-        function isUriAttribute( tag, aname ){
-          /*
-           * http://dev.w3.org/html5/spec/section-index.html#attributes-1
-           * http://www.w3.org/TR/html401/index/attributes.html
-           */
-          var uriAttrs = {
-            'action'     : ['form'],
-            'background' : ['body'],
-            'cite'       : ['blockquote','q','del','ins'],
-            'classid'    : ['object'],
-            'codebase'   : ['object','applet'],
-            'data'       : ['object'],
-            'formaction' : ['button','input'],
-            'href'       : ['a','area','link','base'],
-            'icon'       : ['command'],
-            'longdesc'   : ['img','frame','iframe'],
-            'manifest'   : ['html'],
-            'poster'     : ['video'],
-            'profile'    : ['head'],            
-            'src'        : ['script','input','frame','iframe','img','video','audio','embed','source','track'],
-            'usemap'     : ['img','input','object']
-          };
-          var attr;
-          tag = tag.toLowerCase();
-          aname = aname.toLowerCase();
-          for (attr in uriAttrs) if (uriAttrs.hasOwnProperty( attr )){
-            if ( aname === attr ){
-              return uriAttrs[attr].some(function(t){ return t === tag; });
-            }
-          }
-          return false;
-        }
-
+        
         function getAbsUrl( name, val ) {
           var a = D.createElement( 'a' );
           a.href = val;
           return a.href;
         }
-        
-        return {
+        var domjson = {
           'url'      : D.location.href,
           'doctype'  : getDoctype( D ),
           'elements' : getElements( D.documentElement )
         };
+        if ( crossFrames && crossFrames.length !== 0 ) {
+          domjson['crosses'] = crossFrames;
+        }
+        return domjson;
       }
-      
-      return convert(document) ;
+      return convert(document);
     });
-    console.log(JSON.stringify(dom));
-  }
-  phantom.exit();  
-});
-
-
+    console.log(JSON.stringify(ua.dom));
+    phantom.exit();  
+  };
+};
+var url = 'http://puchi.co/phantom/test.html';
+var phantomUA = new userAgent( {} );
+phantomUA.run( url );
