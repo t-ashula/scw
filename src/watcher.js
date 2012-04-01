@@ -11,6 +11,8 @@ function userAgent(opts) {
 }
 userAgent.prototype.run = function (url) {
   this.url = url;
+  //this.page.settings['webSecurity'] = 'no';
+  this.page.settings['userAgent'] = this.def['ua'] || 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.142 Safari/535.19';
   this.page.open(this.url);
 };
 userAgent.prototype.init = function () {
@@ -104,7 +106,7 @@ userAgent.prototype.init = function () {
                   if (E.src && E.src.match(/^http/i)) {
                     crossFrames.push(E.src);
                   }
-                  console.log(x);
+                  //console.log(x);
                 }
               }
               ele[TYPE] = 'element';
@@ -264,5 +266,5 @@ userAgent.prototype.init = function () {
 };
 var system = require('system');
 var url = system.args[1] || 'http://t-ashula.github.com/scw/';
-var phantomUA = new userAgent({});
+var phantomUA = new userAgent({'ua':'ahuu'});
 phantomUA.run(url);
