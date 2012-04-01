@@ -262,6 +262,7 @@ userAgent.prototype.init = function () {
     phantom.exit();
   };
 };
-var url = 'http://ashula.info';
+var system = require('system');
+var url = system.args[1] || 'http://t-ashula.github.com/scw/';
 var phantomUA = new userAgent({});
 phantomUA.run(url);
