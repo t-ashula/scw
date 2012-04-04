@@ -115,13 +115,15 @@ userAgent.prototype.init = function () {
                 if ( src ) {
                   try{
                     var xhr = new XMLHttpRequest();
-                    xhr.open('GET', src, false );
-                    xhr.onreadystatechange = function(){
-                      if ( xhr.readyState === 4 && ( xhr.status === 200 || xhr.status === 304 ) ) {
-                      }
-                    };
+                    xhr.open( 'GET', src, false );
+                    xhr.onreadystatechange = (function(ele,xhr){
+                      return function(){
+                        if ( xhr.readyState === 4 && ( xhr.status === 200 || xhr.status === 304 ) ) {
+                          ele['SCRIPT'] = xhr.responseText; 
+                        }
+                      };
+                    })(ele,xhr);
                     xhr.send(null);
-                    ele['SCRIPT'] = xhr.responseText;                          
                   } catch (x) {
                     
                   }
