@@ -5,6 +5,7 @@ function userAgent(opts) {
       this.def[k] = opts[k];
     }
   }
+  this.def['ua'] = this.def['ua'] || 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.142 Safari/535.19';
   this.loading = 0;
   this.dom = {};
   this.init();
@@ -12,7 +13,7 @@ function userAgent(opts) {
 userAgent.prototype.run = function (url) {
   this.url = url;
   //this.page.settings['webSecurity'] = 'no';
-  this.page.settings['userAgent'] = this.def['ua'] || 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.142 Safari/535.19';
+  this.page.settings['userAgent'] = this.def['ua'] ;
   this.page.open(this.url);
 };
 userAgent.prototype.init = function () {
@@ -107,6 +108,23 @@ userAgent.prototype.init = function () {
                     crossFrames.push(E.src);
                   }
                   //console.log(x);
+                }
+              }
+              if (E.localName.toLowerCase() === "script") {
+                var src = E.getAttribute('src');
+                if ( src ) {
+                  try{
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', src, false );
+                    xhr.onreadystatechange = function(){
+                      if ( xhr.readyState === 4 && ( xhr.status === 200 || xhr.status === 304 ) ) {
+                      }
+                    };
+                    xhr.send(null);
+                    ele['SCRIPT'] = xhr.responseText;                          
+                  } catch (x) {
+                    
+                  }
                 }
               }
               ele[TYPE] = 'element';
