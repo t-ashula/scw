@@ -13,7 +13,7 @@ function userAgent(opts) {
 userAgent.prototype.run = function (url) {
   this.url = url;
   //this.page.settings['webSecurity'] = 'no';
-  this.page.settings['userAgent'] = this.def['ua'] ;
+  this.page.settings['userAgent'] = this.def['ua'];
   this.page.open(this.url);
 };
 userAgent.prototype.init = function () {
@@ -112,20 +112,21 @@ userAgent.prototype.init = function () {
               }
               if (E.localName.toLowerCase() === "script") {
                 var src = E.getAttribute('src');
-                if ( src ) {
-                  try{
+                if (src) {
+                  try {
                     var xhr = new XMLHttpRequest();
-                    xhr.open( 'GET', src, false );
-                    xhr.onreadystatechange = (function(ele,xhr){
-                      return function(){
-                        if ( xhr.readyState === 4 && ( xhr.status === 200 || xhr.status === 304 ) ) {
-                          ele['SCRIPT'] = xhr.responseText; 
+                    xhr.open('GET', src, false);
+                    xhr.onreadystatechange = (function (ele, xhr) {
+                      return function () {
+                        if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 304)) {
+                          ele['source'] = xhr.responseText;
                         }
                       };
-                    })(ele,xhr);
+                    })(ele, xhr);
                     xhr.send(null);
-                  } catch (x) {
-                    
+                  }
+                  catch (x) {
+
                   }
                 }
               }
@@ -230,9 +231,7 @@ userAgent.prototype.init = function () {
             };
           }
           else {
-            return {
-              'css': rule.cssText
-            };
+            return  rule.cssText;
           }
         }
 
@@ -256,7 +255,8 @@ userAgent.prototype.init = function () {
 
         function getStyles(D) {
           var i, ss, ssl, ret = [];
-          if (!D.styleSheets) {}
+          if (!D.styleSheets) {
+          }
           else {
             ssl = D.styleSheets;
             for (i = 0; ss = ssl[i]; ++i) {
@@ -286,5 +286,7 @@ userAgent.prototype.init = function () {
 };
 var system = require('system');
 var url = system.args[1] || 'http://t-ashula.github.com/scw/';
-var phantomUA = new userAgent({'ua':'ahuu'});
+var phantomUA = new userAgent({
+  'ua': 'ahuu'
+});
 phantomUA.run(url);
