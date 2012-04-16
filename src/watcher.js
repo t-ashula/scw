@@ -231,7 +231,7 @@ userAgent.prototype.init = function () {
             };
           }
           else {
-            return  rule.cssText;
+            return rule.cssText;
           }
         }
 
@@ -255,8 +255,7 @@ userAgent.prototype.init = function () {
 
         function getStyles(D) {
           var i, ss, ssl, ret = [];
-          if (!D.styleSheets) {
-          }
+          if (!D.styleSheets) {}
           else {
             ssl = D.styleSheets;
             for (i = 0; ss = ssl[i]; ++i) {
