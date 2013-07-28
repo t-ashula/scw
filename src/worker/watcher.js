@@ -1,18 +1,21 @@
 function userAgent(opts) {
-  this.def = {};
+  this.def = {
+    'ua' : 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.2 Safari/537.36',
+    'width' : 1280,
+    'height' : 1024    
+  };
   if (opts) {
     for (var k in opts) {
       this.def[k] = opts[k];
     }
   }
-  this.def['ua'] = this.def['ua'] || 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.142 Safari/535.19';
   this.loading = 0;
   this.dom = {};
   this.init();
 }
 userAgent.prototype.run = function (url) {
   this.url = url;
-  //this.page.settings['webSecurity'] = 'no';
+  this.page.settings['webSecurity'] = 'no';
   this.page.settings['userAgent'] = this.def['ua'];
   this.page.open(this.url);
 };
@@ -20,30 +23,33 @@ userAgent.prototype.init = function () {
   var ua = this;
   ua.loading = 0;
   ua.page = new WebPage();
+  ua.page.viewportSize = {
+    width : ua.def['width'],
+    height : ua.def['height']
+  };
   ua.page.onLoadStarted = function () {
-    //console.log("onLoadStarted");
+    // console.log("onLoadStarted");
     ua.loading++;
   };
   ua.page.onError = function (msg, trace) {
-    //console.log(msg); trace.forEach(function(item) {  console.log('  ', item.file, ':', item.line);  });
+    // console.log(msg); trace.forEach(function(item) {  console.log('  ', item.file, ':', item.line);  });
     ua.loading--;
     phantom.exit();
   };
   ua.page.onLoadFinished = function (status) {
-    //console.log(status + ":" + ua.url);
+    // console.log(status + ":" + ua.url);
     ua.dom = ua.page.evaluate(function () {
       function convert(D) {
         var crossFrames = [];
-
         function getDoctype(D) {
           var doctype = D.doctype,
-            code = '';
+          code = '';
           if (doctype) {
             code = '<!DOCTYPE ' + doctype.nodeName + (doctype.publicId ? ' PUBLIC "' + doctype.publicId + '"' : '') + (doctype.systemId ? ' "' + doctype.systemId + '"' : '') + '>';
           }
           return code;
         }
-
+        
         function isUriAttribute(tag, aname) {
           var uriAttrs = {
             'action': ['form'],
@@ -61,8 +67,7 @@ userAgent.prototype.init = function () {
             'profile': ['head'],
             'src': ['script', 'input', 'frame', 'iframe', 'img', 'video', 'audio', 'embed', 'source', 'track'],
             'usemap': ['img', 'input', 'object']
-          };
-          var attr;
+          }, attr;
           tag = tag.toLowerCase();
           aname = aname.toLowerCase();
           for (attr in uriAttrs) if (uriAttrs.hasOwnProperty(attr)) {
@@ -74,24 +79,24 @@ userAgent.prototype.init = function () {
           }
           return false;
         }
-
+        
         function getElements(E) {
           var TYPE = 'type',
             NAME = 'name',
-            ATTR = 'attr',
+            ATTR = 'attrs',
             CHILD = 'child',
             VALUE = 'val',
+            STYLE = 'styles',
             ele = {};
           switch (E.nodeType) {
-          case Node.ELEMENT_NODE:
+           case Node.ELEMENT_NODE:
             ele = (function (E) {
               var children = E.childNodes,
                 child, i, cs = [],
                 c, ele = {},
-                ats;
+                style, ats;
               if (E.hasChildNodes()) {
-                for (i = 0;
-                (child = children[i]); ++i) {
+                for (i = 0; (child = children[i]); ++i) {
                   c = getElements(child);
                   if (c[TYPE] === 'text' && c[VALUE] === '') {
                     continue;
@@ -99,6 +104,7 @@ userAgent.prototype.init = function () {
                   cs.push(c);
                 }
               }
+
               if (E.localName.match(/iframe/i)) {
                 try {
                   ele.inner = convert(E.contentDocument);
@@ -107,9 +113,9 @@ userAgent.prototype.init = function () {
                   if (E.src && E.src.match(/^http/i)) {
                     crossFrames.push(E.src);
                   }
-                  //console.log(x);
                 }
               }
+              
               if (E.localName.toLowerCase() === "script") {
                 var src = E.getAttribute('src');
                 if (src) {
@@ -126,22 +132,31 @@ userAgent.prototype.init = function () {
                     xhr.send(null);
                   }
                   catch (x) {
-
+                    
                   }
                 }
               }
+
               ele[TYPE] = 'element';
               ele[NAME] = E.localName;
+              style = D.defaultView.getComputedStyle(E);
+              ele[STYLE] = {};
+              var props = ['height', 'width', 'top', 'bottom', 'left', 'right', 'color','display','visibility'];
+              props.forEach(function(i){
+                ele[STYLE][i] = style.getPropertyValue(i);
+              });
+              ele[STYLE]['height'] = style.getPropertyValue('height');
               if ((ats = getAttrs(E)) && ats.length !== 0) {
                 ele[ATTR] = getAttrs(E);
               }
+
               if (cs && cs.length !== 0) {
                 ele[CHILD] = cs;
               }
               return ele;
             })(E);
             break;
-          case Node.TEXT_NODE:
+           case Node.TEXT_NODE:
             ele = (function (E) {
               var ele = {};
               ele[TYPE] = 'text';
@@ -149,7 +164,7 @@ userAgent.prototype.init = function () {
               return ele;
             })(E);
             break;
-          case Node.CDATA_SECTION_NODE:
+           case Node.CDATA_SECTION_NODE:
             ele = (function (E) {
               var ele = {};
               ele[TYPE] = 'cdata';
@@ -157,7 +172,7 @@ userAgent.prototype.init = function () {
               return ele;
             })(E);
             break;
-          case Node.COMMENT_NODE:
+           case Node.COMMENT_NODE:
             ele = (function (E) {
               var ele = {};
               ele[TYPE] = 'comment';
@@ -167,18 +182,18 @@ userAgent.prototype.init = function () {
             break;
           }
           return ele;
-
+          
         }
-
+        
         function getText(E) {
           return E.nodeValue.replace(/^\s+$/g, '');
         }
-
+        
         function getAttrs(E) {
           var attrs = E.attributes,
-            attr, val, ret = [],
-            i, tag = E.localName,
-            name;
+          attr, val, ret = [],
+          i, tag = E.localName,
+          name;
           for (i = 0; attr = attrs[i]; ++i) {
             name = attr.name;
             val = E.getAttribute(name);
@@ -192,23 +207,23 @@ userAgent.prototype.init = function () {
           }
           return ret;
         }
-
+        
         function getAbsUrl(name, val) {
           var a = D.createElement('a');
           a.href = val;
           return a.href;
         }
-
+        
         function getOutofDocument(D) {
           var i, d, dc = D.childNodes,
-            ood = [];
+          ood = [];
           for (i = 0; d = dc[i]; ++i) {
             switch (d.nodeType) {
-            case Node.DOCUMENT_TYPE_NODE:
+             case Node.DOCUMENT_TYPE_NODE:
               break;
-            case Node.ELEMENT_NODE:
+             case Node.ELEMENT_NODE:
               break;
-            case Node.COMMENT_NODE:
+             case Node.COMMENT_NODE:
               ood.push({
                 'type': 'comment',
                 'val': getText(d)
@@ -223,7 +238,7 @@ userAgent.prototype.init = function () {
           }
           return ood;
         }
-
+        
         function getStyleRule(rule) {
           if (rule.type == 3) {
             return {
@@ -234,7 +249,7 @@ userAgent.prototype.init = function () {
             return rule.cssText;
           }
         }
-
+        
         function getStyle(stylesheet) {
           var rules = stylesheet.cssRules,
             rule, i, rjson = [],
@@ -252,10 +267,10 @@ userAgent.prototype.init = function () {
           }
           return ret;
         }
-
+        
         function getStyles(D) {
           var i, ss, ssl, ret = [];
-          if (!D.styleSheets) {}
+          if (!D.styleSheets) { }
           else {
             ssl = D.styleSheets;
             for (i = 0; ss = ssl[i]; ++i) {
@@ -264,7 +279,7 @@ userAgent.prototype.init = function () {
           }
           return ret;
         }
-
+        
         var domjson = {
           'url': D.location.href,
           'doctype': getDoctype(D),
@@ -279,13 +294,16 @@ userAgent.prototype.init = function () {
       }
       return convert(document);
     });
-    console.log(JSON.stringify(ua.dom));
+    
+    console.log(JSON.stringify(ua.dom, null, 2));
     phantom.exit();
   };
 };
 var system = require('system');
 var url = system.args[1] || 'http://t-ashula.github.com/scw/';
 var phantomUA = new userAgent({
-  'ua': 'ahuu'
+  'ua': '',
+  'width' : 1280,
+  'height' : 1024
 });
 phantomUA.run(url);
