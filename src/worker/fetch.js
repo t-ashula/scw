@@ -293,17 +293,16 @@ userAgent.prototype.init = function () {
           }
           ret['rules'] = rjson;
           Object.keys(stylesheet).forEach(function(i){
-              if (!((i == 'rules')
-                    ||(i == 'cssRules')
-                    ||(i.match(/^owner/i))
-                    ||(i.match(/^parent/i)))){
-		  ret[i] = stylesheet[i];
-              }
-	      if( i.match(/^ownerNode/i) ) {
-		  ret[i] = stylesheet[i] + "";
-	      }
+            if (!((i == 'rules')
+                ||(i == 'cssRules')
+                ||(i.match(/^owner/i))
+                ||(i.match(/^parent/i)))){
+                ret[i] = stylesheet[i];
+            }
+	    if( i.match(/^ownerNode/i) ) {
+              ret[i] = stylesheet[i] + "";
+            }
           });
-          
           return ret;
         }
         
