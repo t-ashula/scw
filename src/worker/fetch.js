@@ -94,7 +94,7 @@ userAgent.prototype.init = function () {
             ATTR = 'attrs',
             CHILD = 'child',
             VALUE = 'val',
-            STYLE = '_styles',
+            STYLE = 'visual',
             ele = {};
           switch (E.nodeType) {
            case Node.ELEMENT_NODE:
@@ -297,10 +297,12 @@ userAgent.prototype.init = function () {
                 ||(i == 'cssRules')
                 ||(i.match(/^owner/i))
                 ||(i.match(/^parent/i)))){
-              ret[i] = stylesheet[i];
+                ret[i] = stylesheet[i];
+            }
+	    if( i.match(/^ownerNode/i) ) {
+              ret[i] = stylesheet[i] + "";
             }
           });
-          
           return ret;
         }
         

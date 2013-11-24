@@ -344,7 +344,6 @@ userAgent.prototype.init = function () {
           var libs = detector.detect(w);
           return libs;
         }
-
         var domjson = {
           'url': D.location.href,
           'doctype': getDoctype(D),
