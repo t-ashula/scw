@@ -44,6 +44,15 @@ userAgent.prototype.init = function () {
     ua.loading--;
     phantom.exit();
   };
+  ua.page.onResourceReceived = function(res){
+    if ( res.stage == 'end' ){
+      if ( res.url === ua.url ) {
+        for (var i = 0, h; h = res.headers[i]; i++) {
+          console.log(h.name + ': ' + h.value);
+        }
+      }
+    }
+  };
   ua.page.onLoadFinished = function (status) {
     // console.log(status + ":" + ua.url);
     ua.dom = ua.page.evaluate(function () {
@@ -94,7 +103,7 @@ userAgent.prototype.init = function () {
             ATTR = 'attrs',
             CHILD = 'child',
             VALUE = 'val',
-            STYLE = 'visual',
+            STYLE = '_styles',
             ele = {};
           switch (E.nodeType) {
            case Node.ELEMENT_NODE:
@@ -297,12 +306,10 @@ userAgent.prototype.init = function () {
                 ||(i == 'cssRules')
                 ||(i.match(/^owner/i))
                 ||(i.match(/^parent/i)))){
-                ret[i] = stylesheet[i];
-            }
-	    if( i.match(/^ownerNode/i) ) {
-              ret[i] = stylesheet[i] + "";
+              ret[i] = stylesheet[i];
             }
           });
+          
           return ret;
         }
         
@@ -332,13 +339,13 @@ userAgent.prototype.init = function () {
       }
       return convert(document);
     });
-    
-    console.log(JSON.stringify(ua.dom, null, 2));
+
+    //console.log(JSON.stringify(ua.dom, null, 2));
     phantom.exit();
   };
 };
 var system = require('system');
-var url = system.args[1] || 'http://t-ashula.github.com/scw/';
+var url = system.args[1] || 'http://t-ashula.github.io/scw/';
 var phantomUA = new userAgent({
   'width' : 1280,
   'height' : 1024
