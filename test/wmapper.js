@@ -33,9 +33,32 @@ describe('wmapper', function () {
 
     it('setter', function (done) {
       var wmapper = new WMapper();
+      wmapper.userAgent('hoge');
       var expect  = 'hoge',
-        actual  = wmapper.userAgent('hoge'),
-        message = 'wmapper.userAgent("hoge") return "hoge"';
+        actual  = wmapper.userAgent(),
+        message = 'wmapper.userAgent("hoge") => "hoge"';
+      assert( actual === expect, message );
+      done();
+    });
+
+  });
+
+  describe('loglevel property', function () {
+    it('getter', function (done) {
+      var wmapper = new WMapper();
+      var expect  = 'normal',
+        actual  = wmapper.loglevel(),
+        message = 'wmapper default loglevel => normal';
+      assert( actual === expect, message );
+      done();
+    });
+
+    it('setter', function (done) {
+      var wmapper = new WMapper();
+      wmapper.loglevel('verbose');
+      var expect  = 'verbose',
+        actual  = wmapper.loglevel(),
+        message = 'wmapper.loglevel("verboe") => "verbose"';
       assert( actual === expect, message );
       done();
     });

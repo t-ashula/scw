@@ -1,5 +1,32 @@
 #!/usr/bin/env node
 
-var WMapper = require(__dirname + '/../src/wmapper'), 
+var WMapper = require(__dirname + '/../src/wmapper'),
+  program = require('commander'),
+  fs = require('fs'),
   wmapper = new WMapper();
+
+program
+  .version(JSON.parse(fs.readFileSync(__dirname + '/../package.json', 'utf8')).version)
+  .usage('[options] <url>')
+  .option('-a, --agent <agent>', 'set user agent string')
+  .option('--verbose', 'verbose output')
+  .parse(process.argv);
+
+program.name = 'wmapper';
+
+if ( program.args.length !== 1 ) {
+  program.help();
+}
+ 
+console.log('args:' + program.args);
+
+if ( program.agent ) {
+  console.log(program.agent);
+  wmapper.userAgent(program.agent);
+}
+
+if ( program.verbose ) {
+  wmapper.loglevel('verbose');
+}
+
 wmapper.run();
