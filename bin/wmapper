@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+
+var WMapper = require(__dirname + '/../src/wmapper'), 
+  wmapper = new WMapper();
+wmapper.run();

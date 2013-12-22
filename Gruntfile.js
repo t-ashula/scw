@@ -2,6 +2,8 @@
  */
 module.exports = function (grunt) {
   'use strict';
+  //  require('time-grunt')(grunt);
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     watch: {
@@ -62,7 +64,6 @@ module.exports = function (grunt) {
   });
 
   require('load-grunt-tasks')(grunt);
-
   grunt.registerTask('test', ['simplemocha:simple']);
   grunt.registerTask('testp', ['espower:all', 'simplemocha:powered']);
   grunt.registerTask('default', ['jshint', 'testp']);
