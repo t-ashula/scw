@@ -5,7 +5,6 @@
 exports = module.exports = WMapper;
 
 var phantomPath = require('phantomjs').path,
-  // nodePhantom = require('node-phantom'),
   phantom = require('phantom');
 
 function WMapper(opt) {
@@ -71,7 +70,7 @@ WMapper.prototype.loglevel = function (level) {
 
 WMapper.prototype.runCore = function () {
   var wm = this;
-
+  console.log('V:runCore:phantomPath:' + phantomPath);
   phantom.create(
     '--web-security=no', '--ignore-ssl-errors=true', {
       'binary': phantomPath
@@ -99,9 +98,14 @@ WMapper.prototype.runCore = function () {
   function pageOpenCallback(status) {
     console.log('V:pageOpenCallback.status:' + status);
     if (status === 'success') {
-      wm.dom = wm.page.evaluate(pageEvaluate);
+      wm.page.evaluate(pageEvaluate, function evaled(result){
+        console.log(JSON.stringify(result));
+        wm.ph.exit();
+      });
     }
-    wm.ph.exit();
+    else {
+      wm.ph.exit();
+    }
   }
 
   function pageEvaluate() {
@@ -390,8 +394,13 @@ WMapper.prototype.runCore = function () {
       }
       return domjson;
     }
-    return convert(document);
+    var d;
+    try {
+      d = convert(document);
+    }
+    catch(ee) {
+      d = { 'url' : document.location.href, 'exception' : ee };
+    }
+    return d;
   }
-  wm.page.close();
-  wm.ph.exit();
 };
