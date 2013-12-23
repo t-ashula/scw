@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "phantomjs": "*",
-    "commander": "~2.1.0"
+    "commander": "~2.1.0",
+    "phantom": "~0.5.4",
+    "phantomjs": "~1.9.2-6"
   },
   "devDependencies": {
     "grunt-cli": "*",

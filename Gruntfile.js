@@ -1,9 +1,9 @@
-/*
- */
+ /*
+  */
 module.exports = function (grunt) {
   'use strict';
   //  require('time-grunt')(grunt);
-
+  
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     watch: {
@@ -11,7 +11,7 @@ module.exports = function (grunt) {
         files: [
           'src/**/*.js',
           'test/**/*.js',
-          'Gruntfile.js'          
+          'Gruntfile.js'
         ],
         tasks: ['default'],
         options: {
@@ -19,8 +19,8 @@ module.exports = function (grunt) {
         }
       }
     },
-    jshint :{
-      files : ['<%= watch.all.files %>'],
+    jshint: {
+      files: ['<%= watch.all.files %>'],
       options: {
         node: true,
         curly: true,
@@ -28,6 +28,8 @@ module.exports = function (grunt) {
         'undef': true,
         'strict': true,
         'indent': 2,
+        'phantom': true,
+        'browser': true,
         globals: {
           module: false,
           describe: false,
@@ -39,20 +41,20 @@ module.exports = function (grunt) {
       }
     },
     espower: {
-      all : {
-        files : [{
-          expand: true,         
-          cwd: 'test/',         
-          src: ['./**/*.js'], 
-          dest: 'test-espd/',  
-          ext: '.js'           
+      all: {
+        files: [{
+          expand: true,
+          cwd: 'test/',
+          src: ['./**/*.js'],
+          dest: 'test-espd/',
+          ext: '.js'
         }]
       }
     },
     simplemocha: {
       options: {
         reporter: 'spec',
-        ui : 'bdd'
+        ui: 'bdd'
       },
       simple: {
         src: ['test/**/*.js']
@@ -62,7 +64,7 @@ module.exports = function (grunt) {
       }
     }
   });
-
+  
   require('load-grunt-tasks')(grunt);
   grunt.registerTask('test', ['simplemocha:simple']);
   grunt.registerTask('testp', ['espower:all', 'simplemocha:powered']);
