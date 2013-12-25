@@ -51,8 +51,7 @@ WMapper.prototype.loglevel = function (level) {
 };
 
 WMapper.prototype.run = function (url) {
-  var wm = this,
-    result = {};
+  var wm = this;
   if (typeof url !== 'string') {
     console.log('E: no url given');
     return;
@@ -66,69 +65,62 @@ WMapper.prototype.run = function (url) {
   wm.url = url;
   wm.ph = wm.page = null;
   async.waterfall([
-    function core(cb) {
-      wm.runCore(cb);
+
+    function create(next) {
+      phantom.create(
+        '--web-security=no', '--ignore-ssl-errors=true', {
+          'binary': phantomPath
+        },
+        function (ph) {
+          next(null, ph);
+        });
     },
-    function out(res, cb) {
-      wm.output(res);
-      cb();
+    function createCallback(ph, next) {
+      console.log('V:createCallback.ph:' + ph);
+      wm.ph = ph;
+      wm.ph.createPage(function (page) {
+        next(null, page);
+      });
+    },
+    function createPageCallback(page, next) {
+      console.log('V:createPageCallback.page:' + page);
+      wm.page = page;
+      wm.page.set('settings.userAgent', wm.options.agent);
+      wm.page.set('viewportSize', {
+        'width': wm.options.width,
+        'height': wm.options.height
+      });
+      wm.page.open(wm.url, function (status) {
+        next(null, status);
+      });
+    },
+    function pageOpenCallback(status, next) {
+      console.log('V:pageOpenCallback.status:' + status);
+      if (status === 'success') {
+        wm.page.evaluate(pageEvaluate, function (evalResult) {
+          next(null, {
+            openStatus : 'success',
+            results : evalResult
+          });
+        });
+      }
+      else {
+        next(null, {
+          openStatus : 'failed',
+          resutls : {}
+        });
+      }
+    },
+    function evaluated(res, last) {
+      last(null, res);
     }
   ], function (err, res) {
-    console.log('E:run:err:' + err);
-  });
-};
-
-WMapper.prototype.output = function(res) {
-  console.log(JSON.stringify(res, null, 2));
-};
-
-WMapper.prototype.runCore = function (next) {
-  var wm = this;
-  phantom.create(
-    '--web-security=no', '--ignore-ssl-errors=true', {
-      'binary': phantomPath
-    },
-    createCallback
-  );
-
-  function createCallback(ph) {
-    console.log('V:createCallback.ph:' + ph);
-    wm.ph = ph;
-    wm.ph.createPage(createPageCallback);
-  }
-
-  function createPageCallback(page) {
-    console.log('V:createPageCallback.page:' + page);
-    wm.page = page;
-    wm.page.set('settings.userAgent', wm.options.agent);
-    wm.page.set('viewportSize', {
-      'width': wm.options.width,
-      'height': wm.options.height
-    });
-    wm.page.open(wm.url, pageOpenCallback);
-  }
-
-  function pageOpenCallback(status) {
-    console.log('V:pageOpenCallback.status:' + status);
-    if (status === 'success') {
-      wm.page.evaluate(pageEvaluate, evaled);
+    if (err) {
+      console.log('E:run:err:' + err);
     }
-    else {
-      wm.ph.exit();
-      next(null, {
-        'status': status
-      });
-    }
-  }
-
-  function evaled(result) {
-    console.log('V:evaled.results:' + JSON.stringify(result.url));
     wm.ph.exit();
-    next(null, {
-      'status': 'success',
-      'results': result
-    });
-  }
+    wm.output(res);
+  });
 
   function pageEvaluate() {
     function convert(D) {
@@ -428,4 +420,8 @@ WMapper.prototype.runCore = function (next) {
     }
     return d;
   }
+};
+
+WMapper.prototype.output = function (res) {
+  console.log(JSON.stringify(res, null, 2));
 };

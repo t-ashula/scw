@@ -21,6 +21,16 @@ describe('wmapper', function () {
       assert( actual === expect, message );
       done();
     });
+    it('run', function (done) {
+      var wmapper = new WMapper();
+      var expect,
+        actual  = wmapper.run('http://puchi.co/'),
+        message = 'wmapper.run ret undef';
+      setTimeout(function(){
+        assert( actual === expect, message );
+        done();
+      }, 1000);
+    });
   });
 
   describe('userAgent property', function () {
