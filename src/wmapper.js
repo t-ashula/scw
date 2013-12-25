@@ -28,6 +28,28 @@ function WMapper(opt) {
   wm.url = '';
 }
 
+WMapper.prototype.userAgent = function (ua) {
+  var wm = this;
+  if (ua !== undefined) {
+    wm.options.agent = ua;
+  }
+
+  return wm.options.agent;
+};
+
+WMapper.prototype.loglevel = function (level) {
+  var wm = this;
+  switch (level) {
+  case 'verbose':
+  case 'normal':
+  case 'quiet':
+    wm.options.loglevel = level;
+    break;
+  }
+
+  return wm.options.loglevel;
+};
+
 WMapper.prototype.run = function (url) {
   var wm = this,
     result = {};
@@ -58,28 +80,6 @@ WMapper.prototype.run = function (url) {
 
 WMapper.prototype.output = function(res) {
   console.log(JSON.stringify(res, null, 2));
-};
-
-WMapper.prototype.userAgent = function (ua) {
-  var wm = this;
-  if (ua !== undefined) {
-    wm.options.agent = ua;
-  }
-
-  return wm.options.agent;
-};
-
-WMapper.prototype.loglevel = function (level) {
-  var wm = this;
-  switch (level) {
-  case 'verbose':
-  case 'normal':
-  case 'quiet':
-    wm.options.loglevel = level;
-    break;
-  }
-
-  return wm.options.loglevel;
 };
 
 WMapper.prototype.runCore = function (next) {
