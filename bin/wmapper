@@ -4,7 +4,7 @@ var WMapper = require(__dirname + '/../src/wmapper'),
   program = require('commander'),
   fs = require('fs'),
   wmapper = new WMapper(),
-  url;
+  url, res;
 
 program
   .version(JSON.parse(fs.readFileSync(__dirname + '/../package.json', 'utf8')).version)
@@ -15,18 +15,18 @@ program
 
 program.name = 'wmapper';
 
-if ( program.args.length !== 1 ) {
+if (program.args.length !== 1) {
   program.help();
 }
- 
+
 url = program.args[0];
 
-if ( program.agent ) {
+if (program.agent) {
   console.log(program.agent);
   wmapper.userAgent(program.agent);
 }
 
-if ( program.verbose ) {
+if (program.verbose) {
   wmapper.loglevel('verbose');
 }
 

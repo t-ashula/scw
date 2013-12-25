@@ -5,7 +5,8 @@
 exports = module.exports = WMapper;
 
 var phantomPath = require('phantomjs').path,
-  phantom = require('phantom');
+  phantom = require('phantom'),
+  async = require('async');
 
 function WMapper(opt) {
   var wm = this;
@@ -25,25 +26,38 @@ function WMapper(opt) {
   }
   wm.loading = 0;
   wm.url = '';
-  wm.dom = {};
 }
 
 WMapper.prototype.run = function (url) {
-  var wm = this;
+  var wm = this,
+    result = {};
   if (typeof url !== 'string') {
-    console.log('ERROR: no url given');
+    console.log('E: no url given');
     return;
   }
 
   if (wm.err) {
-    console.log('ERROR: phantom.js error ' + wm.err);
+    console.log('E: phantom.js error ' + wm.err);
     return;
   }
 
   wm.url = url;
-  wm.dom = {};
   wm.ph = wm.page = null;
-  wm.runCore();
+  async.waterfall([
+    function core(cb) {
+      wm.runCore(cb);
+    },
+    function out(res, cb) {
+      wm.output(res);
+      cb();
+    }
+  ], function (err, res) {
+    console.log('E:run:err:' + err);
+  });
+};
+
+WMapper.prototype.output = function(res) {
+  console.log(JSON.stringify(res, null, 2));
 };
 
 WMapper.prototype.userAgent = function (ua) {
@@ -68,9 +82,8 @@ WMapper.prototype.loglevel = function (level) {
   return wm.options.loglevel;
 };
 
-WMapper.prototype.runCore = function () {
+WMapper.prototype.runCore = function (next) {
   var wm = this;
-  console.log('V:runCore:phantomPath:' + phantomPath);
   phantom.create(
     '--web-security=no', '--ignore-ssl-errors=true', {
       'binary': phantomPath
@@ -98,14 +111,23 @@ WMapper.prototype.runCore = function () {
   function pageOpenCallback(status) {
     console.log('V:pageOpenCallback.status:' + status);
     if (status === 'success') {
-      wm.page.evaluate(pageEvaluate, function evaled(result){
-        console.log(JSON.stringify(result));
-        wm.ph.exit();
-      });
+      wm.page.evaluate(pageEvaluate, evaled);
     }
     else {
       wm.ph.exit();
+      next(null, {
+        'status': status
+      });
     }
+  }
+
+  function evaled(result) {
+    console.log('V:evaled.results:' + JSON.stringify(result.url));
+    wm.ph.exit();
+    next(null, {
+      'status': 'success',
+      'results': result
+    });
   }
 
   function pageEvaluate() {
@@ -398,8 +420,11 @@ WMapper.prototype.runCore = function () {
     try {
       d = convert(document);
     }
-    catch(ee) {
-      d = { 'url' : document.location.href, 'exception' : ee };
+    catch (ee) {
+      d = {
+        'url': document.location.href,
+        'exception': ee
+      };
     }
     return d;
   }

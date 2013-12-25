@@ -12,13 +12,15 @@ describe('wmapper', function () {
     done(); 
   });
 
-  it('has function run', function (done) {
-    var wmapper = new WMapper();
-    var expect  = 'function',
+  describe('run', function () {
+    it('has function run', function (done) {
+      var wmapper = new WMapper();
+      var expect  = 'function',
         actual  = typeof wmapper.run,
         message = 'wmapper.run should function';
-    assert( actual === expect, message );
-    done();
+      assert( actual === expect, message );
+      done();
+    });
   });
 
   describe('userAgent property', function () {
