@@ -39,10 +39,9 @@ WMapper.prototype.initPlugins = function () {
   };
   fs.readdirSync(__dirname + '/' + pluginDir).forEach(function (file) {
     var fpath = path.resolve(__dirname, pluginDir, file),
-      plugin;
-    plugin = require(fpath);
+      plugin = require(fpath);
     if ('evaluator' in plugin && typeof plugin.evaluator === 'function') {
-      wm.plugins.evaluators.push(plugin.evaluator);
+      wm.plugins.evaluators.push({ name : plugin.name, func: plugin.evaluator } );
     }
   });
 
@@ -128,10 +127,15 @@ WMapper.prototype.run = function (url) {
   ];
   var evfs = wm.plugins.evaluators.map(function (evf) {
     return function (res, next) {
-      wm.page.evaluate(evf, function (evalResult) {
-        res.evalResults.push(evalResult);
+      if ( res.openStatus !== 'success' ) {        
         next(null, res);
-      });
+      }
+      else{
+        wm.page.evaluate(evf.func, function (evalResult) {
+          res.evalResults.push({ name : evf.name, result : evalResult });
+          next(null, res);
+        });
+      }
     };
   });
 
@@ -147,5 +151,5 @@ WMapper.prototype.run = function (url) {
 };
 
 WMapper.prototype.output = function (res) {
-  console.log(JSON.stringify(res, null, 2));
+  console.log(res); // JSON.stringify(res, null, 2));
 };

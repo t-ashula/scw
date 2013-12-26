@@ -1,5 +1,5 @@
 // plugins/jquery.js
-
+exports.name = 'jquery';
 exports.evaluator = function () {
   'use strict';
   var d;
