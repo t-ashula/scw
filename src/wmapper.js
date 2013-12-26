@@ -73,6 +73,7 @@ WMapper.prototype.run = function (url) {
   var wm = this,
     plan = [],
     pre = [],
+    evfs = [],
     post = [];
   if (typeof url !== 'string') {
     console.log('E: no url given');
@@ -120,12 +121,7 @@ WMapper.prototype.run = function (url) {
       });
     }
   ];
-  post = [
-    function evaluated(res, last) {
-      last(null, res);
-    }
-  ];
-  var evfs = wm.plugins.evaluators.map(function (evf) {
+  evfs = wm.plugins.evaluators.map(function (evf) {
     return function (res, next) {
       if ( res.openStatus !== 'success' ) {        
         next(null, res);
@@ -138,6 +134,11 @@ WMapper.prototype.run = function (url) {
       }
     };
   });
+  post = [
+    function evaluated(res, last) {
+      last(null, res);
+    }
+  ];
 
   plan = [].concat(pre).concat(evfs).concat(post);
 
@@ -145,7 +146,9 @@ WMapper.prototype.run = function (url) {
     if (err) {
       console.log('E:run:err:' + err);
     }
-    wm.ph.exit();
+    if ( wm.ph !== null ) {
+      wm.ph.exit();
+    }
     wm.output(res);
   });
 };
