@@ -58,5 +58,23 @@ describe('plugin libraris detector', function () {
       assert.deepEqual(actual, expect, message);
       done();
     });
+
+    it('detect prototype.js', function (done) {
+      var window = {
+        Prototype: {
+          Version: '1.7.1'
+        }
+      };
+      var expect = {
+        libs: [{
+          name: 'Prototype.js',
+          version: '1.7.1'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect Prototype.js 1.7.1';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
   });
 });
