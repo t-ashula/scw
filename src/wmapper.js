@@ -47,6 +47,25 @@ WMapper.prototype.initPlugins = function () {
 
 };
 
+WMapper.prototype.settings = function (key, val) {
+  var wm = this, hasVal = val !== void 0;
+  if ( typeof key === 'string' ) {
+    if ( /^userAgent$/i.test(key) ) {
+      if ( hasVal ) {
+        wm.options.agent = val;
+      }
+      return wm.options.agent;
+    }
+    if ( !( key in wm.options ) ) {
+      return void 0;
+    }
+    if ( hasVal ) {
+      wm.options[key] = val;
+    }
+  }
+  return wm.options;
+};
+
 WMapper.prototype.userAgent = function (ua) {
   var wm = this;
   if (ua !== undefined) {
