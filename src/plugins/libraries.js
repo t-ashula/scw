@@ -32,7 +32,7 @@ exports.evaluator = function (win) {
 
     detectors.forEach(function (d) {
       var res = d.test(win);
-      if (res !== void 0) {
+      if (res !== undef) {
         libs.push(res);
       }
     });
@@ -54,6 +54,7 @@ exports.evaluator = function (win) {
       }
       return undef;
     }));
+    
     ds.push(detector('Prototype.js', function (w) {
       if (w.Prototype !== undef && typeof w.Prototype === 'object') {
         return {
@@ -78,7 +79,7 @@ exports.evaluator = function (win) {
       name: name,
       test: function (w) {
         var res = test(w);
-        if (res !== void 0) {
+        if (res !== undef) {
           res.name = name;
         }
         return res;

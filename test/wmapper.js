@@ -24,7 +24,7 @@ describe('wmapper', function () {
     it('run', function (done) {
       var wmapper = new WMapper();
       var expect,
-        actual = wmapper.run('http://puchi.co/'),
+        actual = wmapper.run('about:blank'),
         message = 'wmapper.run ret undef';
       setTimeout(function () {
         assert(actual === expect, message);
