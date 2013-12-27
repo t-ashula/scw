@@ -54,7 +54,7 @@ describe('plugin libraris detector', function () {
         }]
       },
         actual = libs.evaluator(window),
-        message = 'libs.evaluator ret no lib';
+        message = 'libs.evaluator detect jquery 1.8.3';
       assert.deepEqual(actual, expect, message);
       done();
     });
