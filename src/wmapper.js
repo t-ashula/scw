@@ -26,7 +26,7 @@ function WMapper(opt) {
       }
     }
   }
-  wm.loading = 0;
+
   wm.url = '';
   wm.initPlugins();
 }
@@ -41,51 +41,59 @@ WMapper.prototype.initPlugins = function () {
     var fpath = path.resolve(__dirname, pluginDir, file),
       plugin = require(fpath);
     if ('evaluator' in plugin && typeof plugin.evaluator === 'function') {
-      wm.plugins.evaluators.push({ name : plugin.name, func: plugin.evaluator } );
+      wm.plugins.evaluators.push({
+        name: plugin.name,
+        func: plugin.evaluator
+      });
     }
   });
-
 };
 
 WMapper.prototype.settings = function (key, val) {
-  var wm = this, hasVal = val !== void 0;
-  if ( typeof key === 'string' ) {
-    if ( /^userAgent$/i.test(key) ) {
-      if ( hasVal ) {
+  var wm = this,
+    hasVal = val !== void 0;
+  if (typeof key === 'string') {
+    if (/^userAgent$/i.test(key)) {
+      if (hasVal) {
         wm.options.agent = val;
       }
+
       return wm.options.agent;
     }
-    if ( !( key in wm.options ) ) {
+
+    if (/^loglevel$/i.test(key)) {
+      if (hasVal) {
+        switch (val) {
+        case 'verbose':
+        case 'normal':
+        case 'quiet':
+          wm.options.loglevel = val;
+          break;
+        }
+      }
+      return wm.options.loglevel;
+    }
+
+    if (!(key in wm.options)) {
       return void 0;
     }
-    if ( hasVal ) {
+
+    if (hasVal) {
       wm.options[key] = val;
     }
   }
+
   return wm.options;
 };
 
 WMapper.prototype.userAgent = function (ua) {
   var wm = this;
-  if (ua !== undefined) {
-    wm.options.agent = ua;
-  }
-
-  return wm.options.agent;
+  return wm.settings('userAgent', ua);
 };
 
 WMapper.prototype.loglevel = function (level) {
   var wm = this;
-  switch (level) {
-  case 'verbose':
-  case 'normal':
-  case 'quiet':
-    wm.options.loglevel = level;
-    break;
-  }
-
-  return wm.options.loglevel;
+  return wm.settings('loglevel', level);
 };
 
 WMapper.prototype.run = function (url) {
@@ -107,6 +115,7 @@ WMapper.prototype.run = function (url) {
   wm.url = url;
   wm.ph = wm.page = null;
   pre = [
+
     function create(next) {
       phantom.create(
         '--web-security=no', '--ignore-ssl-errors=true', {
@@ -142,18 +151,22 @@ WMapper.prototype.run = function (url) {
   ];
   evfs = wm.plugins.evaluators.map(function (evf) {
     return function (res, next) {
-      if ( res.openStatus !== 'success' ) {        
+      if (res.openStatus !== 'success') {
         next(null, res);
       }
-      else{
+      else {
         wm.page.evaluate(evf.func, function (evalResult) {
-          res.evalResults.push({ name : evf.name, result : evalResult });
+          res.evalResults.push({
+            name: evf.name,
+            result: evalResult
+          });
           next(null, res);
         });
       }
     };
   });
   post = [
+
     function evaluated(res, last) {
       last(null, res);
     }
@@ -165,7 +178,7 @@ WMapper.prototype.run = function (url) {
     if (err) {
       console.log('E:run:err:' + err);
     }
-    if ( wm.ph !== null ) {
+    if (wm.ph !== null) {
       wm.ph.exit();
     }
     wm.output(res);
