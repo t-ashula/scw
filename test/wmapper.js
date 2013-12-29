@@ -160,7 +160,7 @@ describe('wmapper', function () {
       done();
     });
 
-    it('return objects has name, type, enable', function (done) {
+    it('return objects has name, type, enable, desc', function (done) {
       var wmapper = new WMapper();
       var expect = ['name', 'type', 'enable', 'desc'].sort(),
         actual = Object.keys(wmapper.allPlugins()[0]).sort(),
@@ -217,16 +217,18 @@ describe('wmapper', function () {
       wmapper.nooutput();
       wmapper.disablePlugin('domjson');
       var expect = wmapper.allPlugins().filter(function (p) {
-        return p.enable;
+        return p.type === 'evaluator' && p.enable;
       }).map(function (p) {
         return p.name;
       }),
         actual,
-        message = 'wmapper.disablePlugin("domjson") => result.evajResult.domjson is notdefined';
+        message = 'wmapper.disablePlugin("domjson") => result.evalResult.domjson is notdefined';
       wmapper.run('about:blank');
-      setTimeout(function(){
+      setTimeout(function () {
         var res = JSON.parse(wmapper.output());
-        actual = res.evalResults.map(function(r){ return r.name; } );
+        actual = res.evalResults.map(function (r) {
+          return r.name;
+        });
         assert.deepEqual(actual, expect, message);
         done();
       }, 500);
@@ -278,15 +280,19 @@ describe('wmapper', function () {
     it('enablePlugin() enable plugin', function (done) {
       var wmapper = new WMapper();
       wmapper.nooutput();
-      wmapper.allPlugins().forEach(function (p) { wmapper.disablePlugin(p.name); });
+      wmapper.allPlugins().forEach(function (p) {
+        wmapper.disablePlugin(p.name);
+      });
       wmapper.enablePlugin('window');
       var expect = ['window'],
         actual,
         message = 'disable all plugin. wmapper.enablePlugin("window") => only result.evajResult.window is defined';
       wmapper.run('about:blank');
-      setTimeout(function(){
+      setTimeout(function () {
         var res = JSON.parse(wmapper.output());
-        actual = res.evalResults.map(function(r){ return r.name; } );
+        actual = res.evalResults.map(function (r) {
+          return r.name;
+        });
         assert.deepEqual(actual, expect, message);
         done();
       }, 500);

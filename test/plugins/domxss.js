@@ -3,7 +3,7 @@
 var assert = require('power-assert'),
   libs = require(__dirname + '/../../src/plugins/domxss.js');
 
-describe('window plugin', function () {
+describe('domxss plugin', function () {
   it('plugin', function (done) {
     var expect = 'object',
       actual = typeof libs,
@@ -27,6 +27,14 @@ describe('window plugin', function () {
     done();
   });
 
+  it('has initializer function', function(done) {
+    var expect = 'function',
+      actual = typeof libs.initializer,
+      message = 'libs.initializer should function';
+    assert.equal(actual, expect, message);
+    done();
+  });
+
   it('has evaluator function', function (done) {
     var expect = 'function',
       actual = typeof libs.evaluator,
@@ -35,5 +43,17 @@ describe('window plugin', function () {
     done();
   });
   describe('evaluator', function () {
+    it('returns object', function (done) {
+      var window = {
+        document : {}
+      };
+      var expect = {
+        reports: 1
+      },
+        actual = libs.evaluator(libs.initializer(window)),
+        message = 'libs.evaluator ret reports';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
   });
 });

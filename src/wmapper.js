@@ -31,27 +31,31 @@ function WMapper(opt) {
   wm.initPlugins();
 }
 
-WMapper.prototype.nooutput = function(){
+WMapper.prototype.nooutput = function () {
   this.devnull = true;
 };
 
 WMapper.prototype.initPlugins = function () {
   var wm = this,
     pluginDir = 'plugins';
-  wm.plugins = {
-    evaluators: []
-  };
+  wm.plugins = {};
+  wm.pluginTypes = ['evaluator', 'initializer'];
+  wm.pluginTypes.forEach(function(t){
+    wm.plugins[t + 's'] = [];
+  });
   fs.readdirSync(__dirname + '/' + pluginDir).forEach(function (file) {
     var fpath = path.resolve(__dirname, pluginDir, file),
       plugin = require(fpath);
-    if ('evaluator' in plugin && typeof plugin.evaluator === 'function') {
-      wm.plugins.evaluators.push({
-        name: plugin.name,
-        func: plugin.evaluator,
-        enable: true,
-        desc: plugin.desc
-      });
-    }
+    wm.pluginTypes.forEach(function(t) {
+      if (t in plugin && typeof plugin[t] === 'function') {
+        wm.plugins[t + 's'].push({
+          name: plugin.name,
+          func: plugin.evaluator,
+          enable: true,
+          desc: plugin.desc
+        });
+      }
+    });
   });
 };
 
@@ -120,6 +124,7 @@ WMapper.prototype.run = function (url) {
 
   wm.url = url;
   wm.ph = wm.page = null;
+  
   pre = [
 
     function create(next) {
@@ -144,6 +149,7 @@ WMapper.prototype.run = function (url) {
         'width': wm.options.width,
         'height': wm.options.height
       });
+      // wm.page.set('onAlert', function() { });
       wm.page.open(wm.url, function (status) {
         next(null, status);
       });
@@ -203,7 +209,7 @@ WMapper.prototype.output = function (res) {
     res = wm.result;
   }
   ret = JSON.stringify(res, null, 2);
-  if (!wm.devnull){
+  if (!wm.devnull) {
     console.log(ret);
   }
   return ret;
@@ -211,30 +217,36 @@ WMapper.prototype.output = function (res) {
 
 WMapper.prototype.allPlugins = function () {
   var wm = this,
-    ret;
+    ret = [];
   if (!wm.plugins) {
     wm.initPlugins();
   }
-  ret = [].concat(wm.plugins.evaluators.map(function (ev) {
-    return {
-      'name': ev.name,
-      'type': 'evaluator',
-      'enable': ev.enable,
-      'desc': ev.desc
-    };
-  }));
+  
+  wm.pluginTypes.forEach(function(t){
+    ret = ret.concat(wm.plugins[t + 's'].map(function (ev) {
+      return {
+        'name': ev.name,
+        'type': t,
+        'enable': ev.enable,
+        'desc': ev.desc
+      };
+    }));
+  });
   return ret;
 };
 
 WMapper.prototype._changePluginState = function (pname, state) {
-  var wm = this;
-  for (var i = 0, iz = wm.plugins.evaluators.length; i < iz; ++i) {
-    if (wm.plugins.evaluators[i].name === pname) {
-      wm.plugins.evaluators[i].enable = state;
-      return true;
+  var wm = this, ret = false;
+  wm.pluginTypes.forEach(function(t){
+    var ps = wm.plugins[t +'s'];
+    for (var i = 0, iz = ps.length; i < iz; ++i) {
+      if (ps[i].name === pname) {
+        ps[i].enable = state;
+        ret = true;
+      }
     }
-  }
-  return false;
+  });
+  return ret;
 };
 
 WMapper.prototype.disablePlugin = function (pname) {
