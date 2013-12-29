@@ -116,4 +116,25 @@ describe('wmapper', function () {
     });
 
   });
+
+  describe('output function', function () {
+    it('has output function', function (done) {
+      var wmapper = new WMapper();
+      var expect = 'function',
+        actual = typeof wmapper.output,
+        message = 'wmapper has output function';
+      assert(actual === expect, message);
+      done();
+    });
+
+    it('return string', function (done) {
+      var wmapper = new WMapper();
+      var expect = '{}',
+        actual = wmapper.output({}),
+        message = 'wmapper.output({}) => "{}"';
+      assert(actual === expect, message);
+      done();
+    });
+
+  });
 });

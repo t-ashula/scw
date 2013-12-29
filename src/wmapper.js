@@ -186,5 +186,8 @@ WMapper.prototype.run = function (url) {
 };
 
 WMapper.prototype.output = function (res) {
-  console.log(JSON.stringify(res, null, 2));
+  var ret = JSON.stringify(res, null, 2);
+  console.log(ret);
+  return ret;
 };
+
