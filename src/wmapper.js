@@ -193,14 +193,39 @@ WMapper.prototype.output = function (res) {
   return ret;
 };
 
-WMapper.prototype.allPlugins = function() {
-  var wm = this, ret;
-  if ( !wm.plugins ) {
+WMapper.prototype.allPlugins = function () {
+  var wm = this,
+    ret;
+  if (!wm.plugins) {
     wm.initPlugins();
   }
-  ret = [].concat(wm.plugins.evaluators.map(function(ev){
-    return { 'name' : ev.name, 'type': 'evaluator', enable: ev.enable };
+  ret = [].concat(wm.plugins.evaluators.map(function (ev) {
+    return {
+      'name': ev.name,
+      'type': 'evaluator',
+      enable: ev.enable
+    };
   }));
   return ret;
 };
 
+WMapper.prototype._changePluginState = function (pname, state) {
+  var wm = this;
+  for( var i = 0, iz = wm.plugins.evaluators.length; i < iz; ++i ) {
+    if ( wm.plugins.evaluators[i].name === pname ) {
+      wm.plugins.evaluators[i].enable = state;
+      return true;
+    }
+  }
+  return false;
+};
+
+WMapper.prototype.disablePlugin = function (pname) {
+  var wm = this;
+  return wm._changePluginState(pname, false);
+};
+
+WMapper.prototype.enablePlugin = function (pname) {
+  var wm = this;
+  return wm._changePluginState(pname, true);
+};

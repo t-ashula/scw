@@ -178,12 +178,21 @@ describe('wmapper', function () {
       done();
     });
 
-    it('return boolean', function (done) {
+    it('return true when plugin exist', function (done) {
       var wmapper = new WMapper();
-      var expect = false,
+      var expect,
         actual = wmapper.disablePlugin('window'),
         message = 'wmapper.disablePlugin("window") => true';
       assert(actual, message);
+      done();
+    });
+    
+    it('return false when plugin not exist', function (done) {
+      var wmapper = new WMapper();
+      var expect = false,
+        actual = wmapper.disablePlugin('nosuchplugin'),
+        message = 'wmapper.disablePlugin("nosuchplugin") => false';
+      assert(actual === expect, message);
       done();
     });
 
@@ -193,7 +202,7 @@ describe('wmapper', function () {
       var expect = false,
         actual = wmapper.allPlugins().filter(function(p){ return p.name === 'window'; })[0].enable,
         message = 'wmapper.disablePlugin("window") => plugin[].enable === false';
-      assert.deepEqual(actual, expect, message);
+      assert(actual === expect, message);
       done();
     });
 
@@ -209,9 +218,8 @@ describe('wmapper', function () {
       done();
     });
 
-    it('return boolean', function (done) {
+    it('return true when plugin exist', function (done) {
       var wmapper = new WMapper();
-      wmapper.disablePlugin('window');
       var expect,
         actual = wmapper.enablePlugin('window'),
         message = 'wmapper.enablePlugins(window) => true';
@@ -219,13 +227,23 @@ describe('wmapper', function () {
       done();
     });
 
-    it('return objects has name, type, enable', function (done) {
+    it('return false when plugin not exist', function (done) {
+      var wmapper = new WMapper();
+      var expect = false,
+        actual = wmapper.enablePlugin('nosuchplugin'),
+        message = 'wmapper.enablePlugins(nosuchplugin) => false';
+      assert(actual === expect, message);
+      done();
+    });
+
+    it('enablePlugin() set plugin.enable to true', function (done) {
       var wmapper = new WMapper();
       wmapper.disablePlugin('window');
-      var expect,
+      wmapper.enablePlugin('window');
+      var expect = true,
         actual = wmapper.allPlugins().filter(function(p){ return p.name === 'window'; })[0].enable,
         message = 'wmapper.enablePlugin("window") => plugin[].enable === true';
-      assert.deepEqual(actual, expect, message);
+      assert(actual === expect, message);
       done();
     });
 
