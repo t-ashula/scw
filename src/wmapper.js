@@ -150,22 +150,26 @@ WMapper.prototype.run = function (url) {
       });
     }
   ];
-  evfs = wm.plugins.evaluators.map(function (evf) {
-    return function (res, next) {
-      if (res.openStatus !== 'success') {
-        next(null, res);
-      }
-      else {
-        wm.page.evaluate(evf.func, function (evalResult) {
-          res.evalResults.push({
-            name: evf.name,
-            result: evalResult
-          });
+  evfs = wm.plugins.evaluators
+    .filter(function (evf) {
+      return evf.enable;
+    })
+    .map(function (evf) {
+      return function (res, next) {
+        if (res.openStatus !== 'success') {
           next(null, res);
-        });
-      }
-    };
-  });
+        }
+        else {
+          wm.page.evaluate(evf.func, function (evalResult) {
+            res.evalResults.push({
+              name: evf.name,
+              result: evalResult
+            });
+            next(null, res);
+          });
+        }
+      };
+    });
   post = [
 
     function evaluated(res, last) {
@@ -182,13 +186,18 @@ WMapper.prototype.run = function (url) {
     if (wm.ph !== null) {
       wm.ph.exit();
     }
-    wm.output(res);
+    wm.result = res;
+    wm.output();
   });
 };
 
 WMapper.prototype.output = function (res) {
   var wm = this,
-    ret = JSON.stringify(res, null, 2);
+    ret;
+  if (!res) {
+    res = wm.result;
+  }
+  ret = JSON.stringify(res, null, 2);
   console.log(ret);
   return ret;
 };
@@ -211,8 +220,8 @@ WMapper.prototype.allPlugins = function () {
 
 WMapper.prototype._changePluginState = function (pname, state) {
   var wm = this;
-  for( var i = 0, iz = wm.plugins.evaluators.length; i < iz; ++i ) {
-    if ( wm.plugins.evaluators[i].name === pname ) {
+  for (var i = 0, iz = wm.plugins.evaluators.length; i < iz; ++i) {
+    if (wm.plugins.evaluators[i].name === pname) {
       wm.plugins.evaluators[i].enable = state;
       return true;
     }

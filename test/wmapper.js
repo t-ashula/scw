@@ -186,7 +186,7 @@ describe('wmapper', function () {
       assert(actual, message);
       done();
     });
-    
+
     it('return false when plugin not exist', function (done) {
       var wmapper = new WMapper();
       var expect = false,
@@ -198,12 +198,34 @@ describe('wmapper', function () {
 
     it('disablePlugin() set plugin.enable to false', function (done) {
       var wmapper = new WMapper();
+      wmapper.enablePlugin('window');
       wmapper.disablePlugin('window');
       var expect = false,
-        actual = wmapper.allPlugins().filter(function(p){ return p.name === 'window'; })[0].enable,
+        actual = wmapper.allPlugins().filter(function (p) {
+          return p.name === 'window';
+        })[0].enable,
         message = 'wmapper.disablePlugin("window") => plugin[].enable === false';
       assert(actual === expect, message);
       done();
+    });
+
+    it('disablePlugin() disable plugin', function (done) {
+      var wmapper = new WMapper();
+      wmapper.disablePlugin('domjson');
+      var expect = wmapper.allPlugins().filter(function (p) {
+        return p.enable;
+      }).map(function (p) {
+        return p.name;
+      }),
+        actual,
+        message = 'wmapper.disablePlugin("domjson") => result.evajResult.domjson is notdefined';
+      wmapper.run('about:blank');
+      setTimeout(function(){
+        var res = JSON.parse(wmapper.output());
+        actual = res.evalResults.map(function(r){ return r.name; } );
+        assert.deepEqual(actual, expect, message);
+        done();
+      }, 1000);
     });
 
   });
@@ -241,11 +263,28 @@ describe('wmapper', function () {
       wmapper.disablePlugin('window');
       wmapper.enablePlugin('window');
       var expect = true,
-        actual = wmapper.allPlugins().filter(function(p){ return p.name === 'window'; })[0].enable,
+        actual = wmapper.allPlugins().filter(function (p) {
+          return p.name === 'window';
+        })[0].enable,
         message = 'wmapper.enablePlugin("window") => plugin[].enable === true';
       assert(actual === expect, message);
       done();
     });
 
+    it('enablePlugin() enable plugin', function (done) {
+      var wmapper = new WMapper();
+      wmapper.allPlugins().forEach(function (p) { wmapper.disablePlugin(p.name); });
+      wmapper.enablePlugin('window');
+      var expect = ['window'],
+        actual,
+        message = 'disable all plugin. wmapper.enablePlugin("window") => only result.evajResult.window is defined';
+      wmapper.run('about:blank');
+      setTimeout(function(){
+        var res = JSON.parse(wmapper.output());
+        actual = res.evalResults.map(function(r){ return r.name; } );
+        assert.deepEqual(actual, expect, message);
+        done();
+      }, 1000);
+    });
   });
 });
