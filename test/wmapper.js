@@ -167,4 +167,67 @@ describe('wmapper', function () {
     });
 
   });
+
+  describe('disable Plugin function', function () {
+    it('has disablePlugin function', function (done) {
+      var wmapper = new WMapper();
+      var expect = 'function',
+        actual = typeof wmapper.disablePlugin,
+        message = 'wmapper has disablePlugin function';
+      assert(actual === expect, message);
+      done();
+    });
+
+    it('return boolean', function (done) {
+      var wmapper = new WMapper();
+      var expect = false,
+        actual = wmapper.disablePlugin('window'),
+        message = 'wmapper.disablePlugin("window") => true';
+      assert(actual, message);
+      done();
+    });
+
+    it('disablePlugin() set plugin.enable to false', function (done) {
+      var wmapper = new WMapper();
+      wmapper.disablePlugin('window');
+      var expect = false,
+        actual = wmapper.allPlugins().filter(function(p){ return p.name === 'window'; })[0].enable,
+        message = 'wmapper.disablePlugin("window") => plugin[].enable === false';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
+
+  });
+
+  describe('enablePlugin function', function () {
+    it('has enablePlugin function', function (done) {
+      var wmapper = new WMapper();
+      var expect = 'function',
+        actual = typeof wmapper.enablePlugin,
+        message = 'wmapper has enablePlugin function';
+      assert(actual === expect, message);
+      done();
+    });
+
+    it('return boolean', function (done) {
+      var wmapper = new WMapper();
+      wmapper.disablePlugin('window');
+      var expect,
+        actual = wmapper.enablePlugin('window'),
+        message = 'wmapper.enablePlugins(window) => true';
+      assert(actual, message);
+      done();
+    });
+
+    it('return objects has name, type, enable', function (done) {
+      var wmapper = new WMapper();
+      wmapper.disablePlugin('window');
+      var expect,
+        actual = wmapper.allPlugins().filter(function(p){ return p.name === 'window'; })[0].enable,
+        message = 'wmapper.enablePlugin("window") => plugin[].enable === true';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
+
+  });
 });

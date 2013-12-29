@@ -203,3 +203,4 @@ WMapper.prototype.allPlugins = function() {
   }));
   return ret;
 };
+
