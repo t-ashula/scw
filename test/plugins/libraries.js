@@ -100,5 +100,23 @@ describe('plugin libraris detector', function () {
       assert.deepEqual(actual, expect, message);
       done();
     });
+
+    it('detect Backbone.js', function (done) {
+      var window = {
+        Backbone: {
+          VERSION : '1.1.0'
+        }
+      };
+      var expect = {
+        libs: [{
+          name: 'Backbone.js',
+          version: '1.1.0'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect Backbone.js ';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
   });
 });

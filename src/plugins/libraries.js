@@ -75,6 +75,17 @@ exports.evaluator = function (win) {
       return undef;
     }));
 
+    ds.push(detector('Backbone.js', function (w) {
+      var key = 'Backbone',
+        ver = 'VERSION';
+      if (isObjectExist(w, key)) {
+        return {
+          version: w[key][ver]
+        };
+      }
+      return undef;
+    }));
+
     return ds;
   }
 
