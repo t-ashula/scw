@@ -27,8 +27,7 @@ describe('window plugin', function () {
   });
   describe('evaluator', function () {
     it('returns object', function (done) {
-      var window = {
-      };
+      var window = {};
       var expect = {
         keys: []
       },
@@ -41,13 +40,14 @@ describe('window plugin', function () {
     it('detect jquery', function (done) {
       var window = {
         jQuery: function () {
-          return {
-            jquery: '1.8.3'
-          };
         }
       };
       var expect = {
-        keys: [ 'jQuery' ]
+        keys: [{
+          name: 'jQuery',
+          type: 'function',
+          keys: []
+        }]
       },
         actual = libs.evaluator(window),
         message = 'libs.evaluator detect window.jquery ';
