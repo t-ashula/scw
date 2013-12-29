@@ -56,9 +56,10 @@ exports.evaluator = function (win) {
     }));
 
     ds.push(detector('Prototype.js', function (w) {
-      if (isObjectExist(w, 'Prototype')) {
+      var key = 'Prototype', ver = 'Version';
+      if (isObjectExist(w, key)) {
         return {
-          version: w.Prototype.Version
+          version: w[key][ver]
         };
       }
       return undef;
@@ -79,6 +80,17 @@ exports.evaluator = function (win) {
       var key = 'Backbone',
         ver = 'VERSION';
       if (isObjectExist(w, key)) {
+        return {
+          version: w[key][ver]
+        };
+      }
+      return undef;
+    }));
+
+    ds.push(detector('underscore.js', function (w) {
+      var key = '_',
+        ver = 'VERSION';
+      if (isFunctionExist(w, key)) {
         return {
           version: w[key][ver]
         };

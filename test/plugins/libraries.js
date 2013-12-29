@@ -118,5 +118,23 @@ describe('plugin libraris detector', function () {
       assert.deepEqual(actual, expect, message);
       done();
     });
+
+    it('detect underscore.js', function (done) {
+      var window = {
+        _: function() {
+        }
+      };
+      window._.VERSION = '1.4.3';
+      var expect = {
+        libs: [{
+          name: 'underscore.js',
+          version: '1.4.3'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect underscore.js ';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
   });
 });
