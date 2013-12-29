@@ -56,7 +56,7 @@ exports.evaluator = function (win) {
     }));
 
     ds.push(detector('Prototype.js', function (w) {
-      if (w.Prototype !== undef && typeof w.Prototype === 'object') {
+      if (isObjectExist(w, 'Prototype')) {
         return {
           version: w.Prototype.Version
         };
@@ -67,17 +67,20 @@ exports.evaluator = function (win) {
     ds.push(detector('Angular.js', function (w) {
       var key = 'angular',
         ver = 'version';
-      if (w[key] !== undef && typeof w[key] === 'object') {
-        if (w[key].version !== undef && typeof w[key].version === 'object') {
-          return {
-            version: w.angular.version.full
-          };
-        }
+      if (isObjectExist(w, key) && isObjectExist(w[key], ver)) {
+        return {
+          version: w[key][ver].full
+        };
       }
       return undef;
     }));
 
     return ds;
+  }
+
+  function isObjectExist(obj, oname) {
+    var o = obj[oname];
+    return o !== undef && (o === null || (typeof o === 'object' && !Array.isArray(o)));
   }
 
   function isFunctionExist(obj, fname) {
