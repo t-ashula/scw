@@ -137,4 +137,34 @@ describe('wmapper', function () {
     });
 
   });
+
+  describe('allPlugins function', function () {
+    it('has allPlugins function', function (done) {
+      var wmapper = new WMapper();
+      var expect = 'function',
+        actual = typeof wmapper.allPlugins,
+        message = 'wmapper has allPlugin function';
+      assert(actual === expect, message);
+      done();
+    });
+
+    it('return Array', function (done) {
+      var wmapper = new WMapper();
+      var expect,
+        actual = Array.isArray(wmapper.allPlugins()),
+        message = 'wmapper.allPlugins() => array';
+      assert(actual, message);
+      done();
+    });
+
+    it('return objects has name, type, enable', function (done) {
+      var wmapper = new WMapper();
+      var expect = ['name', 'type', 'enable'].sort(),
+        actual = Object.keys(wmapper.allPlugins()[0]).sort(),
+        message = 'wmapper.allPlugins()[0] has => array';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
+
+  });
 });

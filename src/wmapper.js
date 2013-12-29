@@ -43,7 +43,8 @@ WMapper.prototype.initPlugins = function () {
     if ('evaluator' in plugin && typeof plugin.evaluator === 'function') {
       wm.plugins.evaluators.push({
         name: plugin.name,
-        func: plugin.evaluator
+        func: plugin.evaluator,
+        enable: true
       });
     }
   });
@@ -186,8 +187,19 @@ WMapper.prototype.run = function (url) {
 };
 
 WMapper.prototype.output = function (res) {
-  var ret = JSON.stringify(res, null, 2);
+  var wm = this,
+    ret = JSON.stringify(res, null, 2);
   console.log(ret);
   return ret;
 };
 
+WMapper.prototype.allPlugins = function() {
+  var wm = this, ret;
+  if ( !wm.plugins ) {
+    wm.initPlugins();
+  }
+  ret = [].concat(wm.plugins.evaluators.map(function(ev){
+    return { 'name' : ev.name, 'type': 'evaluator', enable: ev.enable };
+  }));
+  return ret;
+};
