@@ -54,7 +54,7 @@ exports.evaluator = function (win) {
       }
       return undef;
     }));
-    
+
     ds.push(detector('Prototype.js', function (w) {
       if (w.Prototype !== undef && typeof w.Prototype === 'object') {
         return {
@@ -63,6 +63,20 @@ exports.evaluator = function (win) {
       }
       return undef;
     }));
+
+    ds.push(detector('Angular.js', function (w) {
+      var key = 'angular',
+        ver = 'version';
+      if (w[key] !== undef && typeof w[key] === 'object') {
+        if (w[key].version !== undef && typeof w[key].version === 'object') {
+          return {
+            version: w.angular.version.full
+          };
+        }
+      }
+      return undef;
+    }));
+
     return ds;
   }
 

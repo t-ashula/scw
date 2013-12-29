@@ -1,4 +1,4 @@
-// wmapper.js
+// libraries.js
 'use strict';
 var assert = require('power-assert'),
   libs = require(__dirname + '/../../src/plugins/libraries.js');
@@ -73,6 +73,30 @@ describe('plugin libraris detector', function () {
       },
         actual = libs.evaluator(window),
         message = 'libs.evaluator detect Prototype.js 1.7.1';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
+
+    it('detect Angular.js', function (done) {
+      var window = {
+        angular: {
+          version: {
+            'full': '1.2.6',
+            'major': 1,
+            'minor': 2,
+            'dot': 6,
+            'codeName': 'taco-salsafication'
+          }
+        }
+      };
+      var expect = {
+        libs: [{
+          name: 'Angular.js',
+          version: '1.2.6'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect Angular.js 1.2.6';
       assert.deepEqual(actual, expect, message);
       done();
     });
