@@ -18,6 +18,15 @@ describe('window plugin', function () {
     assert.equal(actual, expect, message);
     done();
   });
+
+  it('has description', function(done) {
+    var expect = 'get extra keys in window',
+      actual = libs.desc,
+      message = 'libs should have desc';
+    assert.equal(actual, expect, message);
+    done();
+  });
+
   it('has evaluator function', function (done) {
     var expect = 'function',
       actual = typeof libs.evaluator,

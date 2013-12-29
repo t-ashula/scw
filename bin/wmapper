@@ -22,7 +22,7 @@ wmapper = new WMapper();
 if (program.plugins) {
   ps = wmapper.allPlugins();
   ps.forEach(function (p) {
-    console.log([p.name, p.type, p.enable].join(' - '));
+    console.log([p.name, p.type, p.desc, p.enable].join(' - '));
   });
   process.exit();
 }

@@ -159,7 +159,7 @@ describe('wmapper', function () {
 
     it('return objects has name, type, enable', function (done) {
       var wmapper = new WMapper();
-      var expect = ['name', 'type', 'enable'].sort(),
+      var expect = ['name', 'type', 'enable', 'desc'].sort(),
         actual = Object.keys(wmapper.allPlugins()[0]).sort(),
         message = 'wmapper.allPlugins()[0] has => array';
       assert.deepEqual(actual, expect, message);

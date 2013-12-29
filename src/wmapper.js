@@ -44,7 +44,8 @@ WMapper.prototype.initPlugins = function () {
       wm.plugins.evaluators.push({
         name: plugin.name,
         func: plugin.evaluator,
-        enable: true
+        enable: true,
+        desc: plugin.desc
       });
     }
   });
@@ -212,7 +213,8 @@ WMapper.prototype.allPlugins = function () {
     return {
       'name': ev.name,
       'type': 'evaluator',
-      enable: ev.enable
+      'enable': ev.enable,
+      'desc': ev.desc
     };
   }));
   return ret;

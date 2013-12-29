@@ -2,6 +2,7 @@
 'use strict';
 
 exports.name = 'window';
+exports.desc = 'get extra keys in window';
 exports.evaluator = function (win) {
   var d,
     undef = void 0;

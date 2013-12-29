@@ -12,13 +12,23 @@ describe('plugin libraris detector', function () {
     assert.equal(actual, expect, message);
     done();
   });
+
   it('has name', function (done) {
     var expect = 'domjson',
       actual = libs.name,
-      message = 'libs.name should "domjs"';
+      message = 'libs.name should "domjson"';
     assert.equal(actual, expect, message);
     done();
   });
+
+  it('has description', function(done) {
+    var expect = 'dom to json',
+      actual = libs.desc,
+      message = 'libs.desc should "desc"';
+    assert.equal(actual, expect, message);
+    done();
+  });
+  
   it('has evaluator function', function (done) {
     var expect = 'function',
       actual = typeof libs.evaluator,

@@ -2,6 +2,7 @@
 'use strict';
 
 exports.name = 'libraries';
+exports.desc = 'detect libraries page use';
 exports.evaluator = function (win) {
   var d,
     undef = void 0;

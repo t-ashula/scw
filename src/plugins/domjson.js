@@ -1,6 +1,7 @@
 // plugins/domjson.js
 
 exports.name = 'domjson';
+exports.desc = 'dom to json';
 exports.evaluator = function(){
   'use strict';
   var d;

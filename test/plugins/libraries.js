@@ -11,6 +11,7 @@ describe('plugin libraris detector', function () {
     assert.equal(actual, expect, message);
     done();
   });
+
   it('has name', function (done) {
     var expect = 'libraries',
       actual = libs.name,
@@ -18,6 +19,15 @@ describe('plugin libraris detector', function () {
     assert.equal(actual, expect, message);
     done();
   });
+
+  it('has description', function(done) {
+    var expect = 'detect libraries page use',
+      actual = libs.desc,
+      message = 'libs should have desc';
+    assert.equal(actual, expect, message);
+    done();
+  });
+
   it('has evaluator function', function (done) {
     var expect = 'function',
       actual = typeof libs.evaluator,
