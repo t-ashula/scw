@@ -23,13 +23,15 @@ describe('wmapper', function () {
     });
     it('run', function (done) {
       var wmapper = new WMapper();
+      wmapper.nooutput();
       var expect,
         actual = wmapper.run('about:blank'),
         message = 'wmapper.run ret undef';
       setTimeout(function () {
+        assert(wmapper.result);
         assert(actual === expect, message);
         done();
-      }, 1000);
+      }, 500);
     });
   });
 
@@ -129,6 +131,7 @@ describe('wmapper', function () {
 
     it('return string', function (done) {
       var wmapper = new WMapper();
+      wmapper.nooutput();
       var expect = '{}',
         actual = wmapper.output({}),
         message = 'wmapper.output({}) => "{}"';
@@ -211,6 +214,7 @@ describe('wmapper', function () {
 
     it('disablePlugin() disable plugin', function (done) {
       var wmapper = new WMapper();
+      wmapper.nooutput();
       wmapper.disablePlugin('domjson');
       var expect = wmapper.allPlugins().filter(function (p) {
         return p.enable;
@@ -225,7 +229,7 @@ describe('wmapper', function () {
         actual = res.evalResults.map(function(r){ return r.name; } );
         assert.deepEqual(actual, expect, message);
         done();
-      }, 1000);
+      }, 500);
     });
 
   });
@@ -273,6 +277,7 @@ describe('wmapper', function () {
 
     it('enablePlugin() enable plugin', function (done) {
       var wmapper = new WMapper();
+      wmapper.nooutput();
       wmapper.allPlugins().forEach(function (p) { wmapper.disablePlugin(p.name); });
       wmapper.enablePlugin('window');
       var expect = ['window'],
@@ -284,7 +289,7 @@ describe('wmapper', function () {
         actual = res.evalResults.map(function(r){ return r.name; } );
         assert.deepEqual(actual, expect, message);
         done();
-      }, 1000);
+      }, 500);
     });
   });
 });

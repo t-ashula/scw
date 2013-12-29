@@ -31,6 +31,10 @@ function WMapper(opt) {
   wm.initPlugins();
 }
 
+WMapper.prototype.nooutput = function(){
+  this.devnull = true;
+};
+
 WMapper.prototype.initPlugins = function () {
   var wm = this,
     pluginDir = 'plugins';
@@ -199,7 +203,9 @@ WMapper.prototype.output = function (res) {
     res = wm.result;
   }
   ret = JSON.stringify(res, null, 2);
-  console.log(ret);
+  if (!wm.devnull){
+    console.log(ret);
+  }
   return ret;
 };
 
