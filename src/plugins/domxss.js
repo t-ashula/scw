@@ -14,7 +14,9 @@ exports.initializer = function (win) {
       return 1;
     };
   }
-  catch (ee) {}
+  catch (ee) {
+    win.__domxss = ee;
+  }
   return win;
 };
 exports.evaluator = function (win) {

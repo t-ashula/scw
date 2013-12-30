@@ -50,7 +50,7 @@ WMapper.prototype.initPlugins = function () {
       if (t in plugin && typeof plugin[t] === 'function') {
         wm.plugins[t + 's'].push({
           name: plugin.name,
-          func: plugin.evaluator,
+          func: plugin[t],
           enable: true,
           desc: plugin.desc
         });
@@ -137,26 +137,30 @@ WMapper.prototype.run = function (url) {
       });
     },
     function createCallback(ph, next) {
-      console.log(['V','run.createCallback', ph].join(':'));
       wm.ph = ph;
       wm.ph.createPage(function (err, page) {
         next(null, page);
       });
     },
     function createPageCallback(page, next) {
-      console.log(['V','run.createPageCallback', page].join(':'));
       wm.page = page;
       wm.page.set('settings.userAgent', wm.options.agent);
       wm.page.set('viewportSize', {
         'width': wm.options.width,
         'height': wm.options.height
       });
+      wm.page.onInitialized = function (status) {
+        wm.plugins.initializers.filter(function (ip) {
+          return ip.enable;
+        }).forEach(function (ip) {
+          wm.page.evaluate(ip.func, function (err, r) {});
+        });
+      };
       wm.page.open(wm.url, function (err, status) {
         next(null, status);
       });
     },
     function pageOpenCallback(status, next) {
-      console.log(['V','run.pageOpenCallback', status].join(':'));
       next(null, {
         openStatus: status,
         evalResults: []
@@ -164,18 +168,18 @@ WMapper.prototype.run = function (url) {
     }
   ];
   evfs = wm.plugins.evaluators
-    .filter(function (evf) {
-      return evf.enable;
+    .filter(function (ep) {
+      return ep.enable;
     })
-    .map(function (evf) {
+    .map(function (ep) {
       return function (res, next) {
         if (res.openStatus !== 'success') {
           next(null, res);
         }
         else {
-          wm.page.evaluate(evf.func, function(err, result) {
+          wm.page.evaluate(ep.func, function (err, result) {
             res.evalResults.push({
-              name: evf.name,
+              name: ep.name,
               result: result
             });
             next(null, res);
