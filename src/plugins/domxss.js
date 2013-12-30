@@ -9,15 +9,39 @@ exports.initializer = function (win) {
     if (win === void 0) {
       win = window;
     }
-    win.___domxss = 1;
-    win.document.write = function () {
-      return 1;
+    win.__domxssReports = {
+      'calls': {}
     };
+    var document = win.document;
+    win.document.write = override(win.document.write, function (f) {
+      callCounter('document.write');
+      f.apply(this, arguments);
+    });
+    win.document.createElement = override(win.document.createElement, function (f) {
+      callCounter('document.createElement');
+      return f.apply(this, arguments);
+    });
   }
   catch (ee) {
-    win.__domxss = ee;
+    win.__domxssInit = ee;
   }
   return win;
+
+  function override(f, g) {
+    return function () {
+      return g(f);
+    };
+  }
+
+  function callCounter(name) {
+    var c = win.__domxssReports.calls;
+    if (name in c) {
+      c[name]++;
+    }
+    else {
+      c[name] = 1;
+    }
+  }
 };
 exports.evaluator = function (win) {
   'use strict';
@@ -27,19 +51,23 @@ exports.evaluator = function (win) {
     if (win === void 0) {
       win = window;
     }
-    d = { reports :scan(win) };
+
+    d = {
+      'reports': reports(win)
+    };
+    if (win.__domxssInit) {
+      d.exception = win.__domxssInit;
+    }
   }
   catch (ee) {
     d = {
-      'keys': [],
+      'reports': [],
       'exception': ee
     };
   }
   return d;
 
-  function scan(w) {
-    var d = w.document;
-    // w.alert(1);
-    return w.___domxss;
+  function reports(w) {
+    return w.__domxssReports;
   }
 };

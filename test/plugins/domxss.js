@@ -45,10 +45,13 @@ describe('domxss plugin', function () {
   describe('evaluator', function () {
     it('returns object', function (done) {
       var window = {
-        document : {}
+        document : {
+          write: function(){},
+          createElement: function(){}
+        }
       };
       var expect = {
-        reports: 1
+        reports: { calls: {} }
       },
         actual = libs.evaluator(libs.initializer(window)),
         message = 'libs.evaluator ret reports';
