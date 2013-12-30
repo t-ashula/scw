@@ -31,7 +31,7 @@ describe('wmapper', function () {
         assert(wmapper.result);
         assert(actual === expect, message);
         done();
-      }, 500);
+      }, 1000);
     });
   });
 
@@ -231,7 +231,7 @@ describe('wmapper', function () {
         });
         assert.deepEqual(actual, expect, message);
         done();
-      }, 500);
+      }, 1000);
     });
 
   });
@@ -295,7 +295,7 @@ describe('wmapper', function () {
         });
         assert.deepEqual(actual, expect, message);
         done();
-      }, 500);
+      }, 1000);
     });
   });
 });

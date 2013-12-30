@@ -5,7 +5,7 @@
 exports = module.exports = WMapper;
 
 var phantomPath = require('phantomjs').path,
-  phantom = require('phantom'),
+  phantom = require('node-phantom'),
   async = require('async'),
   path = require('path'),
   fs = require('fs');
@@ -40,13 +40,13 @@ WMapper.prototype.initPlugins = function () {
     pluginDir = 'plugins';
   wm.plugins = {};
   wm.pluginTypes = ['evaluator', 'initializer'];
-  wm.pluginTypes.forEach(function(t){
+  wm.pluginTypes.forEach(function (t) {
     wm.plugins[t + 's'] = [];
   });
   fs.readdirSync(__dirname + '/' + pluginDir).forEach(function (file) {
     var fpath = path.resolve(__dirname, pluginDir, file),
       plugin = require(fpath);
-    wm.pluginTypes.forEach(function(t) {
+    wm.pluginTypes.forEach(function (t) {
       if (t in plugin && typeof plugin[t] === 'function') {
         wm.plugins[t + 's'].push({
           name: plugin.name,
@@ -124,37 +124,39 @@ WMapper.prototype.run = function (url) {
 
   wm.url = url;
   wm.ph = wm.page = null;
-  
+
   pre = [
 
     function create(next) {
-      phantom.create(
-        '--web-security=no', '--ignore-ssl-errors=true', {
-          'binary': phantomPath
-        },
-        function (ph) {
-          next(null, ph);
-        });
+      phantom.create(function (err, ph) {
+        next(null, ph);
+      }, {
+        'web-security': 'no',
+        'ignore-ssl-errors': 'true',
+        phantomPath: phantomPath
+      });
     },
     function createCallback(ph, next) {
+      console.log(['V','run.createCallback', ph].join(':'));
       wm.ph = ph;
-      wm.ph.createPage(function (page) {
+      wm.ph.createPage(function (err, page) {
         next(null, page);
       });
     },
     function createPageCallback(page, next) {
+      console.log(['V','run.createPageCallback', page].join(':'));
       wm.page = page;
       wm.page.set('settings.userAgent', wm.options.agent);
       wm.page.set('viewportSize', {
         'width': wm.options.width,
         'height': wm.options.height
       });
-      // wm.page.set('onAlert', function() { });
-      wm.page.open(wm.url, function (status) {
+      wm.page.open(wm.url, function (err, status) {
         next(null, status);
       });
     },
     function pageOpenCallback(status, next) {
+      console.log(['V','run.pageOpenCallback', status].join(':'));
       next(null, {
         openStatus: status,
         evalResults: []
@@ -171,10 +173,10 @@ WMapper.prototype.run = function (url) {
           next(null, res);
         }
         else {
-          wm.page.evaluate(evf.func, function (evalResult) {
+          wm.page.evaluate(evf.func, function(err, result) {
             res.evalResults.push({
               name: evf.name,
-              result: evalResult
+              result: result
             });
             next(null, res);
           });
@@ -221,8 +223,8 @@ WMapper.prototype.allPlugins = function () {
   if (!wm.plugins) {
     wm.initPlugins();
   }
-  
-  wm.pluginTypes.forEach(function(t){
+
+  wm.pluginTypes.forEach(function (t) {
     ret = ret.concat(wm.plugins[t + 's'].map(function (ev) {
       return {
         'name': ev.name,
@@ -236,9 +238,10 @@ WMapper.prototype.allPlugins = function () {
 };
 
 WMapper.prototype._changePluginState = function (pname, state) {
-  var wm = this, ret = false;
-  wm.pluginTypes.forEach(function(t){
-    var ps = wm.plugins[t +'s'];
+  var wm = this,
+    ret = false;
+  wm.pluginTypes.forEach(function (t) {
+    var ps = wm.plugins[t + 's'];
     for (var i = 0, iz = ps.length; i < iz; ++i) {
       if (ps[i].name === pname) {
         ps[i].enable = state;
