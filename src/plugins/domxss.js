@@ -1,5 +1,5 @@
 // plugins/domxss.js
-
+// jshint -W061
 exports.name = 'domxss';
 exports.desc = 'dom based xss scanner';
 exports.initializer = function (win) {
