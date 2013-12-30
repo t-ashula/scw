@@ -47,7 +47,8 @@ describe('domxss plugin', function () {
       var window = {
         document : {
           write: function(){},
-          createElement: function(){}
+          createElement: function(){},
+          body: {}
         }
       };
       var expect = {

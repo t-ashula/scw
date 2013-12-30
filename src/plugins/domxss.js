@@ -9,32 +9,45 @@ exports.initializer = function (win) {
     if (win === void 0) {
       win = window;
     }
-    win.__domxssReports = {
+    if ( !win.__wmapper ) {
+      win.__wmapper = {};
+    }
+    win.__wmapper.domxssReports = {
       'calls': {}
     };
-    var document = win.document;
-    win.document.write = override(win.document.write, function (f) {
-      callCounter('document.write');
-      f.apply(this, arguments);
-    });
-    win.document.createElement = override(win.document.createElement, function (f) {
-      callCounter('document.createElement');
-      return f.apply(this, arguments);
-    });
+    initInstrument(win);
   }
   catch (ee) {
-    win.__domxssInit = ee;
+    win.__wmapper.domxssInit = JSON.stringify(ee);
   }
   return win;
 
-  function override(f, g) {
+  function initInstrument(win){
+    win.document.write = inst(win.document.write, 'doc.write');
+    win.document.writeln = inst(win.document.writeln, 'doc.writeln');
+    win.eval = inst(win.eval, 'eval');
+    win.setTimeout = inst(win.setTimeout, 'setTimeout');
+    win.setInterval = inst(win.setInterval, 'setInterval');
+    /*
+      // WebKit can not do this.
+      var innerHTMLdescriptor = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+      Object.defineProperty(Element.prototype, 'innerHTML', {
+      set: function (htmlVal) {
+        callCounter('innerHTML');
+        innerHTMLdescriptor.set.call(this, htmlVal);
+      }
+    });*/
+  }
+  
+  function inst(f, name) {
     return function () {
-      return g(f);
+      callCounter(name);
+      return f.apply(this, arguments);
     };
   }
 
   function callCounter(name) {
-    var c = win.__domxssReports.calls;
+    var c = win.__wmapper.domxssReports.calls;
     if (name in c) {
       c[name]++;
     }
@@ -51,12 +64,11 @@ exports.evaluator = function (win) {
     if (win === void 0) {
       win = window;
     }
-
     d = {
       'reports': reports(win)
     };
     if (win.__domxssInit) {
-      d.exception = win.__domxssInit;
+      d.exception = win.__wmapper.domxssInit;
     }
   }
   catch (ee) {
@@ -68,6 +80,6 @@ exports.evaluator = function (win) {
   return d;
 
   function reports(w) {
-    return w.__domxssReports;
+    return w.__wmapper.domxssReports;
   }
 };
