@@ -99,6 +99,23 @@ exports.evaluator = function (win) {
       return undef;
     }));
 
+    ds.push(detector('swfobject.js', function (w) {
+      var key1 = 'deconcept', key2 = 'swfobject',
+        key11 = 'SWFObject', key22 = 'embedSWF',
+        ver1 = '1.5.x', ver2 = '2.x';
+      if (isObjectExist(w, key2) && isFunctionExist(w[key2], key22)) {
+        return {
+          version: ver2
+        };
+      }
+      if (isObjectExist(w, key1) && isFunctionExist(w[key1], key11)) {
+        return {
+          version: ver1
+        };
+      }
+      return undef;
+    }));
+
     return ds;
   }
 

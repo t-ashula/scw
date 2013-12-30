@@ -20,7 +20,7 @@ describe('plugin libraris detector', function () {
     done();
   });
 
-  it('has description', function(done) {
+  it('has description', function (done) {
     var expect = 'detect libraries page use',
       actual = libs.desc,
       message = 'libs should have desc';
@@ -114,7 +114,7 @@ describe('plugin libraris detector', function () {
     it('detect Backbone.js', function (done) {
       var window = {
         Backbone: {
-          VERSION : '1.1.0'
+          VERSION: '1.1.0'
         }
       };
       var expect = {
@@ -131,8 +131,7 @@ describe('plugin libraris detector', function () {
 
     it('detect underscore.js', function (done) {
       var window = {
-        _: function() {
-        }
+        _: function () {}
       };
       window._.VERSION = '1.4.3';
       var expect = {
@@ -143,6 +142,44 @@ describe('plugin libraris detector', function () {
       },
         actual = libs.evaluator(window),
         message = 'libs.evaluator detect underscore.js ';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
+
+    it('detect swfobject.js v2', function (done) {
+      var window = {
+        swfobject: {
+          embedSWF: function () {}
+        }
+      };
+
+      var expect = {
+        libs: [{
+          name: 'swfobject.js',
+          version: '2.x'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect swfobject.js ';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
+
+    it('detect swfobject.js v1.5', function (done) {
+      var window = {
+        deconcept: {
+          SWFObject: function () {}
+        }
+      };
+
+      var expect = {
+        libs: [{
+          name: 'swfobject.js',
+          version: '1.5.x'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect swfobject.js ';
       assert.deepEqual(actual, expect, message);
       done();
     });
