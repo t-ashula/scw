@@ -51,12 +51,9 @@ describe('plugin libraris detector', function () {
 
     it('detect jquery', function (done) {
       var window = {
-        jQuery: {
-          fn : {
-            jquery: '1.8.3'
-          }
-        }
+        jQuery: function(){}
       };
+      window.jQuery.fn = { jquery : '1.8.3' };
       var expect = {
         libs: [{
           name: 'jQuery',

@@ -86,7 +86,7 @@ exports.evaluator = function (win) {
     return detector(name, function (w) {
       var o = w;
       for (var i = 0, iz = keys.length; i < iz - 1; ++i) {
-        if (!isObjectExist(o, keys[i])) {
+        if (!isDefined(o, keys[i])) {
           return undef;
         }
         o = o[keys[i]];
@@ -95,7 +95,10 @@ exports.evaluator = function (win) {
     });
   }
 
-
+  function isDefined(obj, oname) {
+    return (oname in obj) && (obj[oname] !== null) && (obj[oname] !== undef);
+  }
+  
   function isObjectExist(obj, oname) {
     var o = obj[oname];
     return o !== undef && (o === null || (typeof o === 'object' && !Array.isArray(o)));
