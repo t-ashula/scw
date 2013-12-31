@@ -42,6 +42,15 @@ exports.evaluator = function (win) {
 
   function initDetectors() {
     var ds = [];
+    ds.push(simpleDetector('underscore.js', ['_', 'VERSION']));
+    ds.push(simpleDetector('jQuery', ['jQuery', 'fn', 'jquery']));
+    ds.push(simpleDetector('jQuery$', ['$', 'fn', 'jquery']));
+    ds.push(simpleDetector('Prototype.js', ['Prototype', 'Version']));
+    ds.push(simpleDetector('Angular.js', ['angular', 'version', 'full']));
+    ds.push(simpleDetector('Backbone.js', ['Backbone', 'VERSION']));
+    ds.push(simpleDetector('Modernizr', ['Modernizr', '_version']));
+    ds.push(simpleDetector('Dojo', ['dojo', 'version']));
+
     ds.push(detector('swfobject.js', function (w) {
       var key1 = 'deconcept',
         key2 = 'swfobject',
@@ -62,14 +71,6 @@ exports.evaluator = function (win) {
       return undef;
     }));
 
-    ds.push(simpleDetector('underscore.js', ['_','VERSION']));
-    ds.push(simpleDetector('jQuery', ['jQuery', 'fn', 'jquery']));
-    ds.push(simpleDetector('jQuery$', ['$', 'fn', 'jquery']));
-    ds.push(simpleDetector('Prototype.js', ['Prototype', 'Version']));
-    ds.push(simpleDetector('Angular.js', ['angular', 'version', 'full']));
-    ds.push(simpleDetector('Backbone.js', ['Backbone', 'VERSION']));
-    ds.push(simpleDetector('Modernizr', ['Modernizr', '_version']));
-    
     return ds;
   }
 
@@ -82,14 +83,16 @@ exports.evaluator = function (win) {
         }
         o = o[keys[i]];
       }
-      return { version : o[keys[iz - 1]] };
+      return {
+        version: o[keys[iz - 1]] + ''
+      };
     });
   }
 
   function isDefined(obj, oname) {
     return (oname in obj) && (obj[oname] !== null) && (obj[oname] !== undef);
   }
-  
+
   function isObjectExist(obj, oname) {
     var o = obj[oname];
     return o !== undef && (o === null || (typeof o === 'object' && !Array.isArray(o)));

@@ -51,9 +51,11 @@ describe('plugin libraris detector', function () {
 
     it('detect jquery', function (done) {
       var window = {
-        jQuery: function(){}
+        jQuery: function () {}
       };
-      window.jQuery.fn = { jquery : '1.8.3' };
+      window.jQuery.fn = {
+        jquery: '1.8.3'
+      };
       var expect = {
         libs: [{
           name: 'jQuery',
@@ -184,7 +186,7 @@ describe('plugin libraris detector', function () {
     it('detect Modernizr', function (done) {
       var window = {
         Modernizr: {
-          '_version' : '2.7.1'
+          '_version': '2.7.1'
         }
       };
 
@@ -199,5 +201,35 @@ describe('plugin libraris detector', function () {
       assert.deepEqual(actual, expect, message);
       done();
     });
+
+    it('detect Dojo', function (done) {
+      var window = {
+        dojo: {
+          version: {
+            major: 1,
+            minor: 9,
+            patch: 0,
+            flag: '',
+            revision: NaN,
+            toString: function () {
+              var v = window.dojo.version;
+              return v.major + '.' + v.minor + '.' + v.patch + v.flag + ' (' + v.revision + ')';
+            }
+          }
+        }
+      };
+
+      var expect = {
+        libs: [{
+          name: 'Dojo',
+          version: '1.9.0 (NaN)'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect Modernizr.js ';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
+
   });
 });
