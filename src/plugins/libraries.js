@@ -42,52 +42,6 @@ exports.evaluator = function (win) {
 
   function initDetectors() {
     var ds = [];
-    ds.push(detector('jQuery', function (w) {
-      if (isFunctionExist(w, 'jQuery')) {
-        return {
-          version: w.jQuery().jquery
-        };
-      }
-      if (isFunction(w, '$') && typeof w.$.fn === 'object') {
-        return {
-          version: w.$().jquery
-        };
-      }
-      return undef;
-    }));
-
-    ds.push(detector('Prototype.js', function (w) {
-      var key = 'Prototype', ver = 'Version';
-      if (isObjectExist(w, key)) {
-        return {
-          version: w[key][ver]
-        };
-      }
-      return undef;
-    }));
-
-    ds.push(detector('Angular.js', function (w) {
-      var key = 'angular',
-        ver = 'version';
-      if (isObjectExist(w, key) && isObjectExist(w[key], ver)) {
-        return {
-          version: w[key][ver].full
-        };
-      }
-      return undef;
-    }));
-
-    ds.push(detector('Backbone.js', function (w) {
-      var key = 'Backbone',
-        ver = 'VERSION';
-      if (isObjectExist(w, key)) {
-        return {
-          version: w[key][ver]
-        };
-      }
-      return undef;
-    }));
-
     ds.push(detector('underscore.js', function (w) {
       var key = '_',
         ver = 'VERSION';
@@ -100,9 +54,12 @@ exports.evaluator = function (win) {
     }));
 
     ds.push(detector('swfobject.js', function (w) {
-      var key1 = 'deconcept', key2 = 'swfobject',
-        key11 = 'SWFObject', key22 = 'embedSWF',
-        ver1 = '1.5.x', ver2 = '2.x';
+      var key1 = 'deconcept',
+        key2 = 'swfobject',
+        key11 = 'SWFObject',
+        key22 = 'embedSWF',
+        ver1 = '1.5.x',
+        ver2 = '2.x';
       if (isObjectExist(w, key2) && isFunctionExist(w[key2], key22)) {
         return {
           version: ver2
@@ -116,15 +73,28 @@ exports.evaluator = function (win) {
       return undef;
     }));
 
-    ds.push(simpleDetector('Modernizr', 'Modernizr', '_version'));
+    ds.push(simpleDetector('jQuery', ['jQuery', 'fn', 'jquery']));
+    ds.push(simpleDetector('jQuery', ['$', 'fn', 'jquery']));
+    ds.push(simpleDetector('Prototype.js', ['Prototype', 'Version']));
+    ds.push(simpleDetector('Angular.js', ['angular', 'version', 'full']));
+    ds.push(simpleDetector('Backbone.js', ['Backbone', 'VERSION']));
+    ds.push(simpleDetector('Modernizr', ['Modernizr', '_version']));
     return ds;
   }
 
-  function simpleDetector(name, key, ver) {
-    return detector(name, function(w) {
-      return ( isObjectExist(w, key) ) ? { version: w[key][ver] } : undef;
+  function simpleDetector(name, keys) {
+    return detector(name, function (w) {
+      var o = w;
+      for (var i = 0, iz = keys.length; i < iz - 1; ++i) {
+        if (!isObjectExist(o, keys[i])) {
+          return undef;
+        }
+        o = o[keys[i]];
+      }
+      return { version : o[keys[iz - 1]] };
     });
-  }                   
+  }
+
 
   function isObjectExist(obj, oname) {
     var o = obj[oname];

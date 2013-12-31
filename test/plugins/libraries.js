@@ -51,10 +51,10 @@ describe('plugin libraris detector', function () {
 
     it('detect jquery', function (done) {
       var window = {
-        jQuery: function () {
-          return {
+        jQuery: {
+          fn : {
             jquery: '1.8.3'
-          };
+          }
         }
       };
       var expect = {
