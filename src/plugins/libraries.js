@@ -116,8 +116,15 @@ exports.evaluator = function (win) {
       return undef;
     }));
 
+    ds.push(simpleDetector('Modernizr', 'Modernizr', '_version'));
     return ds;
   }
+
+  function simpleDetector(name, key, ver) {
+    return detector(name, function(w) {
+      return ( isObjectExist(w, key) ) ? { version: w[key][ver] } : undef;
+    });
+  }                   
 
   function isObjectExist(obj, oname) {
     var o = obj[oname];

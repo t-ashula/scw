@@ -183,5 +183,24 @@ describe('plugin libraris detector', function () {
       assert.deepEqual(actual, expect, message);
       done();
     });
+
+    it('detect Modernizr', function (done) {
+      var window = {
+        Modernizr: {
+          '_version' : '2.7.1'
+        }
+      };
+
+      var expect = {
+        libs: [{
+          name: 'Modernizr',
+          version: '2.7.1'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect Modernizr.js ';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
   });
 });

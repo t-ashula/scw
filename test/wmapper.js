@@ -31,7 +31,7 @@ describe('wmapper', function () {
         assert(wmapper.result);
         assert(actual === expect, message);
         done();
-      }, 1000);
+      }, 2000);
     });
   });
 
