@@ -42,17 +42,6 @@ exports.evaluator = function (win) {
 
   function initDetectors() {
     var ds = [];
-    ds.push(detector('underscore.js', function (w) {
-      var key = '_',
-        ver = 'VERSION';
-      if (isFunctionExist(w, key)) {
-        return {
-          version: w[key][ver]
-        };
-      }
-      return undef;
-    }));
-
     ds.push(detector('swfobject.js', function (w) {
       var key1 = 'deconcept',
         key2 = 'swfobject',
@@ -73,12 +62,14 @@ exports.evaluator = function (win) {
       return undef;
     }));
 
+    ds.push(simpleDetector('underscore.js', ['_','VERSION']));
     ds.push(simpleDetector('jQuery', ['jQuery', 'fn', 'jquery']));
-    ds.push(simpleDetector('jQuery', ['$', 'fn', 'jquery']));
+    ds.push(simpleDetector('jQuery$', ['$', 'fn', 'jquery']));
     ds.push(simpleDetector('Prototype.js', ['Prototype', 'Version']));
     ds.push(simpleDetector('Angular.js', ['angular', 'version', 'full']));
     ds.push(simpleDetector('Backbone.js', ['Backbone', 'VERSION']));
     ds.push(simpleDetector('Modernizr', ['Modernizr', '_version']));
+    
     return ds;
   }
 
