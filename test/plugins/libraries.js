@@ -231,5 +231,42 @@ describe('plugin libraris detector', function () {
       done();
     });
 
+    it('detect Script.aculo.us', function (done) {
+      var window = {
+        'Scriptaculous': {
+          'Version': '1.8.1'
+        }
+      };
+
+      var expect = {
+        libs: [{
+          name: 'script.aculo.us',
+          version: '1.8.1'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect script.aculo.us';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
+
+    it('detect MooTools', function (done) {
+      var window = {
+        'MooTools': {
+          'version': '1.3dev'
+        }
+      };
+
+      var expect = {
+        libs: [{
+          name: 'MooTools',
+          version: '1.3dev'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect MooTools';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
   });
 });

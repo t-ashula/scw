@@ -50,6 +50,8 @@ exports.evaluator = function (win) {
     ds.push(simpleDetector('Backbone.js', ['Backbone', 'VERSION']));
     ds.push(simpleDetector('Modernizr', ['Modernizr', '_version']));
     ds.push(simpleDetector('Dojo', ['dojo', 'version']));
+    ds.push(simpleDetector('script.aculo.us', ['Scriptaculous', 'Version']));
+    ds.push(simpleDetector('MooTools', ['MooTools', 'version']));
 
     ds.push(detector('swfobject.js', function (w) {
       var key1 = 'deconcept',
