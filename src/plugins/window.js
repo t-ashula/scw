@@ -27,23 +27,23 @@ exports.evaluator = function (win) {
       pages = Object.keys(win),
       extkeys = pages.filter(function (i) {
         return defwinkeys.indexOf(i) < 0;
-      }), ret = [];
+      }),
+      ret = [];
 
-    function valType(v){
-      var t = typeof v;
-      if ( v === null ) {
-        return 'null';
-      }
-      return Array.isArray(v) ? 'array' : t;
+    function valType(v) {
+      return Object.prototype.toString.call(v);
     }
-    ret = extkeys.map(function(k) {
-      var r = { 'name' : k, 'type': valType(win[k]) };
-      if ( r.type === 'function' || r.type === 'object') {
+    ret = extkeys.map(function (k) {
+      var r = {
+        'name': k,
+        'type': valType(win[k])
+      };
+      if (/ (Function|Object)\]/i.test(r.type)) {
         r.keys = Object.keys(win[k]);
       }
       return r;
     });
-    
+
     return ret;
   }
 };

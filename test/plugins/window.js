@@ -54,7 +54,7 @@ describe('window plugin', function () {
       var expect = {
         keys: [{
           name: 'jQuery',
-          type: 'function',
+          type: '[object Function]',
           keys: []
         }]
       },
