@@ -320,5 +320,19 @@ describe('plugin libraris detector', function () {
       assert.deepEqual(actual, expect, message);
       done();
     });
+
+    it('detect jQuery UI', function (done) {
+      var window = { jQuery : { ui : { version : '1.10.3' } } };
+      var expect = {
+        libs: [{
+          name: 'jQuery UI',
+          version: '1.10.3'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect ExtJS';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
   });
 });

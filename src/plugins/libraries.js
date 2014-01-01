@@ -45,6 +45,7 @@ exports.evaluator = function (win) {
     ds.push(simpleDetector('underscore.js', ['_', 'VERSION']));
     ds.push(simpleDetector('jQuery', ['jQuery', 'fn', 'jquery']));
     ds.push(simpleDetector('jQuery$', ['$', 'fn', 'jquery']));
+    ds.push(simpleDetector('jQuery UI', ['jQuery', 'ui', 'version']));
     ds.push(simpleDetector('Prototype.js', ['Prototype', 'Version']));
     ds.push(simpleDetector('Angular.js', ['angular', 'version', 'full']));
     ds.push(simpleDetector('Backbone.js', ['Backbone', 'VERSION']));
