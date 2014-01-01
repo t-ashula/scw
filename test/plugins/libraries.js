@@ -268,5 +268,57 @@ describe('plugin libraris detector', function () {
       assert.deepEqual(actual, expect, message);
       done();
     });
+
+    it('detect YUI3', function (done) {
+      var window = {
+        'YUI': function(){
+        }
+      };
+      window.YUI.version = '3.14.1';
+
+      var expect = {
+        libs: [{
+          name: 'YUI3',
+          version: '3.14.1'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect YUI';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
+
+    it('detect YUI2', function (done) {
+      var window = {
+        'YAHOO': {
+          'VERSION' : '2.9.0'
+        }
+      };
+
+      var expect = {
+        libs: [{
+          name: 'YUI2',
+          version: '2.9.0'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect YUI';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
+
+    it('detect ExtJS', function (done) {
+      var window = { Ext : { versions : { extjs: { version : '4.1.1.1' } } } };
+      var expect = {
+        libs: [{
+          name: 'ExtJS',
+          version: '4.1.1.1'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect ExtJS';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
   });
 });

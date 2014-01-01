@@ -153,7 +153,7 @@ WMapper.prototype.run = function (url) {
         wm.plugins.initializers.filter(function (ip) {
           return ip.enable;
         }).forEach(function (ip) {
-          wm.page.evaluate(ip.func, function (err, r) {});
+          wm.page.evaluate(ip.func);
         });
       };
       wm.page.open(wm.url, function (err, status) {

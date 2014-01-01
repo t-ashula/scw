@@ -52,6 +52,9 @@ exports.evaluator = function (win) {
     ds.push(simpleDetector('Dojo', ['dojo', 'version']));
     ds.push(simpleDetector('script.aculo.us', ['Scriptaculous', 'Version']));
     ds.push(simpleDetector('MooTools', ['MooTools', 'version']));
+    ds.push(simpleDetector('YUI3', ['YUI', 'version']));
+    ds.push(simpleDetector('YUI2', ['YAHOO', 'VERSION']));
+    ds.push(simpleDetector('ExtJS', ['Ext','versions','extjs','version']));
 
     ds.push(detector('swfobject.js', function (w) {
       var key1 = 'deconcept',
