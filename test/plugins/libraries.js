@@ -330,7 +330,21 @@ describe('plugin libraris detector', function () {
         }]
       },
         actual = libs.evaluator(window),
-        message = 'libs.evaluator detect ExtJS';
+        message = 'libs.evaluator detect jQuery UI';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
+
+    it('detect jQuery Mobile', function (done) {
+      var window = { jQuery : { mobile : { version : '1.4.0' } } };
+      var expect = {
+        libs: [{
+          name: 'jQuery Mobile',
+          version: '1.4.0'
+        }]
+      },
+        actual = libs.evaluator(window),
+        message = 'libs.evaluator detect jQuery Mobile';
       assert.deepEqual(actual, expect, message);
       done();
     });
