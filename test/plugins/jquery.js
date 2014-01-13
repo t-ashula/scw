@@ -38,9 +38,28 @@ describe('plugin jquery-related detector', function () {
 
   describe('evaluator', function () {
     it('returns object', function (done) {
-      var window = {};
+      var window = {
+        jQuery: function () {}
+      };
+      window.jQuery.fn = {};
+      window.jQuery.noConflict = function () {};
       var expect = {
         plugins: []
+      },
+        actual = plugin.evaluator(window),
+        message = 'plugin.evaluator ret no plugin';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
+
+    it('detect migrate', function (done) {
+      var window = {
+        jQuery: function () {}
+      };
+      window.jQuery.fn = {};
+      window.jQuery.noConflict = function () {};
+      var expect = {
+        plugins: [{ 'name' : 'migrate', 'version' : 'N/A' }]
       },
         actual = plugin.evaluator(window),
         message = 'plugin.evaluator ret no plugin';

@@ -1,4 +1,4 @@
-// plugins/libraries.js
+// plugins/jquery.js
 'use strict';
 
 exports.name = 'jquery';
@@ -20,11 +20,32 @@ exports.evaluator = function (win) {
       'exception': ee
     };
   }
+
   return d;
 
   function detectJqueryPlugins(win) {
-    var ret = [];
-    
+    var cands = deepJqueryDetector(win),
+      ret = [];
+    if (cands.length < 1) {
+      return ret;
+    }
     return ret;
+  }
+
+  function deepJqueryDetector(win) {
+    var cands = Object.keys(win).filter(function (k) {
+      return Object.prototype.toString.call(win[k]) === '[object Function]';
+    }).filter(function (k) {
+      var o = win[k], n = 'fn';
+      return n in o && typeof o[n] === 'object';
+    }).filter(function (k) {
+      var o = win[k], n = 'noConflict';
+      return n in o && typeof o[n] === 'function';
+    });
+    return cands;
+  }
+
+  function migrate(){
+    
   }
 };
