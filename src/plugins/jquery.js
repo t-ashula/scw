@@ -11,12 +11,12 @@ exports.evaluator = function (win) {
       win = window;
     }
     d = {
-      'libs': detectJqueryPlugins(win)
+      'plugins': detectJqueryPlugins(win)
     };
   }
   catch (ee) {
     d = {
-      'libs': [],
+      'plugins': [],
       'exception': ee
     };
   }
