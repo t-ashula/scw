@@ -72,16 +72,18 @@ exports.evaluator = function (win) {
           'version': 'N/A'
         };
       }),
-      d('prettyPhoto',function($){
+      d('prettyPhoto', function ($) {
         return 'prettyPhoto' in $ && 'prettyPhoto' in $.fn;
-      }, function($){
-        return { 'version': $.prettyPhoto.version };
+      }, function ($) {
+        return {
+          'version': $.prettyPhoto.version
+        };
       })
     );
     return ds;
   }
 
-  function getJqueryKeys(win){
+  function getJqueryKeys(win) {
     var keys, ret, f;
 
     keys = Object.keys(win).filter(function (k) {
@@ -95,21 +97,23 @@ exports.evaluator = function (win) {
         n = 'noConflict';
       return n in o && typeof o[n] === 'function';
     });
-    
-    if ( keys.length < 2 ) {
+
+    if (keys.length < 2) {
       return keys;
     }
-    
+
     ret = [];
-    for ( var i = 0, k; (k = keys[i]); ++i ){
+    for (var i = 0, k;
+      (k = keys[i]); ++i) {
       f = false;
-      for( var j = 0, r; (r = ret[j]); ++j ) {
+      for (var j = 0, r;
+        (r = ret[j]); ++j) {
         if (win[r].fn.jquery === win[k].fn.jquery) {
           f = true;
           break;
         }
       }
-      if ( !f ) {
+      if (!f) {
         ret.push(k);
       }
     }
