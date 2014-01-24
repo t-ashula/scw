@@ -52,14 +52,21 @@ describe('plugin jquery-related detector', function () {
       done();
     });
 
-    it('detect migrate', function (done) {
+    it('detect migrate plugin', function (done) {
       var window = {
         jQuery: function () {}
       };
-      window.jQuery.fn = {};
+      window.jQuery.fn = { jquery: '2.0.3' };
       window.jQuery.noConflict = function () {};
+      window.jQuery.migrateTrace = true;
       var expect = {
-        plugins: [{ 'name' : 'migrate', 'version' : 'N/A' }]
+        plugins: [{
+          'name': 'migrate',
+          'info': {
+            'version': 'N/A'
+          },
+          'parent' : { 'name' : 'jQuery', 'ver' : '2.0.3' }
+        }]
       },
         actual = plugin.evaluator(window),
         message = 'plugin.evaluator ret no plugin';
