@@ -5,10 +5,8 @@ var page = require('webpage').create(),
 
 page.open(url, function (status) {
   var res = page.evaluate(function (ons) {
-    Array.prototype.selectMany = function (fn) {
-      return this.map(fn).reduce(function (x, y) { return x.concat(y); }, []);
-    };
-    return ons.split(',').filter(function (on) {
+    var ret = [];
+    ons.split(',').filter(function (on) {
       return on !== '';
     }).map(function (on) {
       var o = window,
@@ -20,7 +18,8 @@ page.open(url, function (status) {
         }
       }
       return Object.keys(o).sort().map(function(k){ return on + "." + k; } );
-    }).selectMany(function(x){ return x; });    
+    }).forEach(function(a){ ret = ret.concat(a); } );
+    return ret;
   }, objName);
   console.log(JSON.stringify(res, null, 2));
   phantom.exit();
