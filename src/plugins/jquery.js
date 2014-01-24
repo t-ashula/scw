@@ -162,19 +162,22 @@ exports.evaluator = function (win) {
       var jq = win[jqk],
         ks = Object.keys(jq).sort(),
         fns = Object.keys(jq.fn).sort(),
-        dict = getDict(jq.fn.jquery),
-        ret = {}, t;
+        ver = jq.fn.jquery,
+        dict = getDict(ver),
+        ret = {}, t, d;
       if ('jQuery' in dict) {
+        d = dict.jQuery.split('/');
         t = ks.filter(function (k) {
-          return dict.jQuery.indexOf(k) === -1;
+          return d.indexOf(k) === -1;
         });
         if (t.length > 0) {
           ret.jQuery = t;
         }
       }
       if ('jQuery.fn' in dict) {
+        d = dict['jQuery.fn'].split('/');
         t = fns.filter(function (k) {
-          return dict['jQuery.fn'].indexOf(k) === -1;
+          return d.indexOf(k) === -1;
         });
 
         if (t.length > 0) {
@@ -183,6 +186,7 @@ exports.evaluator = function (win) {
       }
       if (('jQuery' in ret) || ('fn' in ret)) {
         ret.key = jqk;
+        ret.ver = ver;
         return ret;
       }
 
