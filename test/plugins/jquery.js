@@ -41,10 +41,11 @@ describe('plugin jquery-related detector', function () {
       var window = {
         jQuery: function () {}
       };
-      window.jQuery.fn = {};
+      window.jQuery.fn = { jquery: '2.0.3' };
       window.jQuery.noConflict = function () {};
       var expect = {
-        plugins: []
+        plugins: [],
+        extras: [{}]
       },
         actual = plugin.evaluator(window),
         message = 'plugin.evaluator ret no plugin';
@@ -56,7 +57,9 @@ describe('plugin jquery-related detector', function () {
       var window = {
         jQuery: function () {}
       };
-      window.jQuery.fn = { jquery: '2.0.3' };
+      window.jQuery.fn = {
+        jquery: '2.0.3'
+      };
       window.jQuery.noConflict = function () {};
       window.jQuery.migrateTrace = true;
       var expect = {
@@ -65,12 +68,15 @@ describe('plugin jquery-related detector', function () {
           'info': {
             'version': 'N/A'
           },
-          'parent' : { 'name' : 'jQuery', 'ver' : '2.0.3' }
+          'parent': {
+            'name': 'jQuery',
+            'ver': '2.0.3'
+          }
         }]
       },
         actual = plugin.evaluator(window),
-        message = 'plugin.evaluator ret no plugin';
-      assert.deepEqual(actual, expect, message);
+        message = 'plugin.evaluator detect migrate plugin';
+      assert.deepEqual(actual.plugins, expect.plugins, message);
       done();
     });
 
@@ -79,21 +85,59 @@ describe('plugin jquery-related detector', function () {
         jQuery: function () {}
       };
       window.jQuery.noConflict = function () {};
-      window.jQuery.fn = { jquery: '2.0.3', prettyPhoto: function(){} };
-      window.jQuery.prettyPhoto = { 'version' : '3.1.4' };
-      
+      window.jQuery.fn = {
+        jquery: '2.0.3',
+        prettyPhoto: function () {}
+      };
+      window.jQuery.prettyPhoto = {
+        'version': '3.1.4'
+      };
+
       var expect = {
         plugins: [{
           'name': 'prettyPhoto',
           'info': {
             'version': '3.1.4'
           },
-          'parent' : { 'name' : 'jQuery', 'ver' : '2.0.3' }
+          'parent': {
+            'name': 'jQuery',
+            'ver': '2.0.3'
+          }
         }]
       },
+        ep = expect.plugins,
         actual = plugin.evaluator(window),
-        message = 'plugin.evaluator ret no plugin';
-      assert.deepEqual(actual, expect, message);
+        ap = actual.plugins,
+        message = 'plugin.evaluator detect prttyPhoto plugin';
+      assert.deepEqual(ap, ep, message);
+      done();
+    });
+
+    it('detect extra keys', function (done) {
+      var window = {
+        jQuery: function () {}
+      };
+      window.jQuery.noConflict = function () {};
+      window.jQuery.fn = {
+        jquery: '2.0.3',
+        prettyPhoto: function () {}
+      };
+      window.jQuery.prettyPhoto = {
+        'version': '3.1.4'
+      };
+
+      var expect = {
+        extras: [{
+          'key': 'jQuery',
+          'jQuery': ['prettyPhoto'],
+          'fn': ['prettyPhoto']
+        }]
+      }, ee = expect.extras,
+        actual = plugin.evaluator(window),
+        ae = actual.extras,
+        message = 'plugin.evaluator ret extra';
+      assert.deepEqual(ae, ee, message);
+
       done();
     });
   });
