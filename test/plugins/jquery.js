@@ -73,5 +73,28 @@ describe('plugin jquery-related detector', function () {
       assert.deepEqual(actual, expect, message);
       done();
     });
+
+    it('detect prettyphoto plugin', function (done) {
+      var window = {
+        jQuery: function () {}
+      };
+      window.jQuery.noConflict = function () {};
+      window.jQuery.fn = { jquery: '2.0.3', prettyPhoto: function(){} };
+      window.jQuery.prettyPhoto = { 'version' : '3.1.4' };
+      
+      var expect = {
+        plugins: [{
+          'name': 'prettyPhoto',
+          'info': {
+            'version': '3.1.4'
+          },
+          'parent' : { 'name' : 'jQuery', 'ver' : '2.0.3' }
+        }]
+      },
+        actual = plugin.evaluator(window),
+        message = 'plugin.evaluator ret no plugin';
+      assert.deepEqual(actual, expect, message);
+      done();
+    });
   });
 });

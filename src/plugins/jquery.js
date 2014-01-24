@@ -64,13 +64,20 @@ exports.evaluator = function (win) {
       };
     }
     var ds = [];
-    ds.push(d('migrate', function ($) {
-      return ('migrateTrace' in $);
-    }, function ($) {
-      return {
-        'version': 'N/A'
-      };
-    }));
+    ds.push(
+      d('migrate', function ($) {
+        return ('migrateTrace' in $);
+      }, function ($) {
+        return {
+          'version': 'N/A'
+        };
+      }),
+      d('prettyPhoto',function($){
+        return 'prettyPhoto' in $ && 'prettyPhoto' in $.fn;
+      }, function($){
+        return { 'version': $.prettyPhoto.version };
+      })
+    );
     return ds;
   }
 
