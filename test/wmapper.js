@@ -47,7 +47,7 @@ describe('wmapper', function () {
     it('return all settings when no argument passed', function (done) {
       var wmapper = new WMapper();
       var expect = {
-        'agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36',
+        'agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.76 Safari/537.36',
         'loglevel': 'normal',
         'width': 1280,
         'height': 1024
@@ -59,7 +59,7 @@ describe('wmapper', function () {
     });
     it('return userAgent string when argument is "userAgent"', function (done) {
       var wmapper = new WMapper();
-      var expect = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36',
+      var expect = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.76 Safari/537.36',
         actual = wmapper.settings('userAgent'),
         message = 'WMapper.settings("userAgent") return ua settings';
       assert.ok(actual, expect, message);
@@ -78,7 +78,7 @@ describe('wmapper', function () {
   describe('userAgent property', function () {
     it('getter', function (done) {
       var wmapper = new WMapper();
-      var expect = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36',
+      var expect = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.76 Safari/537.36',
         actual = wmapper.userAgent(),
         message = 'wmapper default user agent';
       assert(actual === expect, message);
