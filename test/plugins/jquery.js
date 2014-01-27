@@ -28,6 +28,14 @@ describe('plugin jquery-related detector', function () {
     done();
   });
 
+  it('has initializer function', function(done) {
+    var expect = 'function',
+      actual = typeof plugin.initializer,
+      message = 'plugin.initializer should function';
+    assert.equal(actual, expect, message);
+    done();
+  });
+
   it('has evaluator function', function (done) {
     var expect = 'function',
       actual = typeof plugin.evaluator,
@@ -45,7 +53,8 @@ describe('plugin jquery-related detector', function () {
       window.jQuery.noConflict = function () {};
       var expect = {
         plugins: [],
-        extras: [{}]
+        extras: [{}],
+        jqueries: []
       },
         actual = plugin.evaluator(window),
         message = 'plugin.evaluator ret no plugin';

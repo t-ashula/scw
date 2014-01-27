@@ -1,19 +1,45 @@
 // plugins/jquery.js
-'use strict';
-
 exports.name = 'jquery';
 exports.desc = 'detect jQuery related libraries page use';
+exports.initializer = function (win) {
+  'use strict';
+  if (win === void 0) {
+    win = window;
+  }
+  if (!('__wmapper' in win)) {
+    win.__wmapper = {};
+  }
+  win.__wmapper.jqueries = [];
+  (function (wm) {
+    win.__defineSetter__('jQuery', function (val) {
+      if (!val || !val.fn) {
+        return;
+      }
+      wm.jqueries.push(val);
+    });
+
+    win.__defineGetter__('jQuery', function () {
+      return wm.jqueries.length > 0 ? wm.jqueries[wm.jqueries.length - 1] : void 0;
+    });
+  })(win.__wmapper);
+};
 exports.evaluator = function (win) {
-  var d, r,
+  'use strict';
+  var d, r, j,
     undef = void 0;
   try {
     if (win === void 0) {
       win = window;
     }
+    j = win.__wmapper && win.__wmapper.jqueries && win.__wmapper.jqueries.map(function (q) {
+      return q.fn.jquery;
+    }) || [];
+
     r = detectJqueryPlugins(win);
     d = {
       'plugins': r.plugins,
-      'extras': r.extras
+      'extras': r.extras,
+      'jqueries': j
     };
   }
   catch (ee) {
@@ -35,7 +61,8 @@ exports.evaluator = function (win) {
     if (cands.length < 1) {
       return {
         'plugins': [],
-        'extras': []
+        'extras': [],
+        'prov': []
       };
     }
 
@@ -57,8 +84,8 @@ exports.evaluator = function (win) {
     });
 
     return {
-      plugins: ps,
-      extras: getExtraKeys(win, cands)
+      'plugins': ps,
+      'extras': getExtraKeys(win, cands),
     };
   }
 
