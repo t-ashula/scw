@@ -11,34 +11,41 @@ exports.initializer = function (win) {
   }
   win.__wmapper.jqueries = [];
   (function (wm) {
-    win.__defineSetter__('jQuery', function (val) {
-      if (!val || !val.fn) {
-        return;
+    var jq;
+    Object.defineProperty(window, 'jQuery', {
+      set: function (val) {
+        if (val) {
+          wm.jqueries.push(val);
+        }
+      },
+      get: function () {
+        return wm.jqueries[wm.jqueries.length - 1];
       }
-      wm.jqueries.push(val);
-    });
-
-    win.__defineGetter__('jQuery', function () {
-      return wm.jqueries.length > 0 ? wm.jqueries[wm.jqueries.length - 1] : void 0;
     });
   })(win.__wmapper);
 };
 exports.evaluator = function (win) {
   'use strict';
-  var d, r, j,
+  var d, r, j, cands,
     undef = void 0;
   try {
     if (win === void 0) {
       win = window;
     }
+
     j = win.__wmapper && win.__wmapper.jqueries && win.__wmapper.jqueries.map(function (q) {
       return q.fn.jquery;
     }) || [];
 
-    r = detectJqueryPlugins(win);
+    if (j.length > 0) {
+      win.__wmapper.jqueries.forEach(function (q) {
+        win['__wmapper-' + q.fn.jquery] = q;
+      });
+    }
+    cands = getJqueryKeys(win);
     d = {
-      'plugins': r.plugins,
-      'extras': r.extras,
+      'plugins': detectJqueryPlugins(win, cands),
+      'extras': getExtraKeys(win, cands),
       'jqueries': j
     };
   }
@@ -54,16 +61,11 @@ exports.evaluator = function (win) {
     return Object.prototype.toString.call(o);
   }
 
-  function detectJqueryPlugins(win) {
-    var cands = getJqueryKeys(win),
-      ds = initDetectors(),
+  function detectJqueryPlugins(win, cands) {
+    var ds = initDetectors(),
       ps = [];
     if (cands.length < 1) {
-      return {
-        'plugins': [],
-        'extras': [],
-        'prov': []
-      };
+      return [];
     }
 
     ds.forEach(function (d) {
@@ -83,10 +85,7 @@ exports.evaluator = function (win) {
       });
     });
 
-    return {
-      'plugins': ps,
-      'extras': getExtraKeys(win, cands),
-    };
+    return ps;
   }
 
   function initDetectors() {
