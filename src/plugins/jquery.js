@@ -14,9 +14,7 @@ exports.initializer = function (win) {
     var jq;
     Object.defineProperty(window, 'jQuery', {
       set: function (val) {
-        if (val) {
-          wm.jqueries.push(val);
-        }
+        wm.jqueries.push(val);
       },
       get: function () {
         return wm.jqueries[wm.jqueries.length - 1];
@@ -119,7 +117,7 @@ exports.evaluator = function (win) {
   function getJqueryKeys(win) {
     var keys, ret, f;
 
-    keys = Object.keys(win).filter(function (k) {
+    keys = Object.keys(win).concat(['$', 'jQuery']).reverse().filter(function (k) {
       return toStr(win[k]) === '[object Function]';
     }).filter(function (k) {
       var o = win[k],
@@ -136,20 +134,13 @@ exports.evaluator = function (win) {
     }
 
     ret = [];
-    for (var i = 0, k;
-      (k = keys[i]); ++i) {
-      f = false;
-      for (var j = 0, r;
-        (r = ret[j]); ++j) {
-        if (win[r].fn.jquery === win[k].fn.jquery) {
-          f = true;
-          break;
-        }
-      }
-      if (!f) {
+    keys.forEach(function (k) {
+      if (ret.every(function (r) {
+        return win[r].fn.jquery !== win[k].fn.jquery;
+      })) {
         ret.push(k);
       }
-    }
+    });
     return ret;
   }
 
