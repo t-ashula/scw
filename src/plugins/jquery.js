@@ -6,21 +6,32 @@ exports.initializer = function (win) {
   if (win === void 0) {
     win = window;
   }
-  if (!('__wmapper' in win)) {
-    win.__wmapper = {};
-  }
-  win.__wmapper.jqueries = [];
-  (function (wm) {
-    var jq;
+
+  (function () {
+    var jqs = [],
+      jqc = [];
     Object.defineProperty(window, 'jQuery', {
-      set: function (val) {
-        wm.jqueries.push(val);
+      set: function (q) {
+        jqs.push(q);
+        jqc.push('jQuery.S.' + ((q && q.fn) ? q.fn.jquery : '') + ';' + (typeof q) + ';' + jqs.join(','));
       },
       get: function () {
-        return wm.jqueries[wm.jqueries.length - 1];
+        var q = jqs[jqs.length - 1];
+        jqc.push('jQuery.G.' + ((q && q.fn) ? q.fn.jquery : q) + ';' + jqs.join(','));
+        return q;
       }
     });
-  })(win.__wmapper);
+    Object.defineProperty(window, '__wmapper_jqs', {
+      get: function () {
+        return jqs;
+      }
+    });
+    Object.defineProperty(window, '__wmapper_jqc', {
+      get: function () {
+        return jqc;
+      }
+    });
+  })();
 };
 exports.evaluator = function (win) {
   'use strict';
@@ -31,20 +42,21 @@ exports.evaluator = function (win) {
       win = window;
     }
 
-    j = win.__wmapper && win.__wmapper.jqueries && win.__wmapper.jqueries.map(function (q) {
+    j = win.__wmapper_jqs && win.__wmapper_jqs.map(function (q) {
       return q.fn.jquery;
     }) || [];
 
     if (j.length > 0) {
-      win.__wmapper.jqueries.forEach(function (q) {
-        win['__wmapper-' + q.fn.jquery] = q;
+      win.__wmapper_jqs.forEach(function (q) {
+        win['__wmapper_' + q.fn.jquery] = q;
       });
     }
+
     cands = getJqueryKeys(win);
     d = {
       'plugins': detectJqueryPlugins(win, cands),
       'extras': getExtraKeys(win, cands),
-      'jqueries': j
+      'jqueries': j.concat(win.__wmapper_jqc)
     };
   }
   catch (ee) {
@@ -115,7 +127,7 @@ exports.evaluator = function (win) {
   }
 
   function getJqueryKeys(win) {
-    var keys, ret, f;
+    var keys, ret;
 
     keys = Object.keys(win).concat(['$', 'jQuery']).reverse().filter(function (k) {
       return toStr(win[k]) === '[object Function]';

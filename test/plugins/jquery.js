@@ -82,10 +82,10 @@ describe('plugin jquery-related detector', function () {
             'ver': '2.0.3'
           }
         }]
-      },
-        actual = plugin.evaluator(window),
+      }, ep = expect.plugins,
+        actual = plugin.evaluator(window), ap = actual.plugins,
         message = 'plugin.evaluator detect migrate plugin';
-      assert.deepEqual(actual.plugins, expect.plugins, message);
+      assert.deepEqual(ap, ep, message);
       done();
     });
 
