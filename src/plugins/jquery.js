@@ -1,40 +1,40 @@
 // plugins/jquery.js
+
+'use strict';
 exports.name = 'jquery';
 exports.desc = 'detect jQuery related libraries page use';
 exports.initializer = function (win) {
-  'use strict';
   if (win === void 0) {
     win = window;
   }
-
-  (function () {
-    var jqs = [],
-      jqc = [];
+  win.__wmapper = win.__wmapper ? win.__wmapper : {};
+  /**/
+  win.__wmapper.jqs = [];
+  win.__wmapper.jqc = [];
+  (function (wm) {
+    var q;
+    if ('jQuery' in win) {
+      q = win.jQuery;
+      delete win.jQuery;
+    }
     Object.defineProperty(window, 'jQuery', {
       set: function (q) {
-        jqs.push(q);
-        jqc.push('jQuery.S.' + ((q && q.fn) ? q.fn.jquery : '') + ';' + (typeof q) + ';' + jqs.join(','));
+        wm.jqs.push(q);
+        wm.jqc.push('jQuery.S.' + ((q && q.fn) ? q.fn.jquery : '') + ';' + (typeof q) + ';' + wm.jqs.join(','));
       },
       get: function () {
-        var q = jqs[jqs.length - 1];
-        jqc.push('jQuery.G.' + ((q && q.fn) ? q.fn.jquery : q) + ';' + jqs.join(','));
+        var q = wm.jqs[wm.jqs.length - 1];
+        wm.jqc.push('jQuery.G.' + ((q && q.fn) ? q.fn.jquery : q) + ';' + wm.jqs.join(','));
         return q;
       }
     });
-    Object.defineProperty(window, '__wmapper_jqs', {
-      get: function () {
-        return jqs;
-      }
-    });
-    Object.defineProperty(window, '__wmapper_jqc', {
-      get: function () {
-        return jqc;
-      }
-    });
-  })();
+    if (q !== void 0) {
+      win.jQuery = q;
+    }
+  })(win.__wmapper);
+  /**/
 };
 exports.evaluator = function (win) {
-  'use strict';
   var d, r, j, cands,
     undef = void 0;
   try {
@@ -42,12 +42,12 @@ exports.evaluator = function (win) {
       win = window;
     }
 
-    j = win.__wmapper_jqs && win.__wmapper_jqs.map(function (q) {
+    j = win.__wmapper && win.__wmapper.jqs && win.__wmapper.jqs.map(function (q) {
       return q.fn.jquery;
     }) || [];
 
     if (j.length > 0) {
-      win.__wmapper_jqs.forEach(function (q) {
+      win.__wmapper.jqs.forEach(function (q) {
         win['__wmapper_' + q.fn.jquery] = q;
       });
     }
@@ -56,7 +56,7 @@ exports.evaluator = function (win) {
     d = {
       'plugins': detectJqueryPlugins(win, cands),
       'extras': getExtraKeys(win, cands),
-      'jqueries': j.concat(win.__wmapper_jqc)
+      'jqueries': j
     };
   }
   catch (ee) {
@@ -129,7 +129,7 @@ exports.evaluator = function (win) {
   function getJqueryKeys(win) {
     var keys, ret;
 
-    keys = Object.keys(win).concat(['$', 'jQuery']).reverse().filter(function (k) {
+    keys = Object.keys(win).concat(['jQuery', '$']).reverse().filter(function (k) {
       return toStr(win[k]) === '[object Function]';
     }).filter(function (k) {
       var o = win[k],
