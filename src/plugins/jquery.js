@@ -58,6 +58,12 @@ exports.evaluator = function (win) {
       'extras': getExtraKeys(win, cands),
       'jqueries': j
     };
+
+    if (j.length > 0) {
+      win.__wmapper.jqs.forEach(function (q) {
+        delete win['__wmapper_' + q.fn.jquery];
+      });
+    }
   }
   catch (ee) {
     d = {
@@ -160,370 +166,370 @@ exports.evaluator = function (win) {
     var keyDicts = {
       '2.0.0-beta3': {
         'jQuery': {
-          'deled': ['_evalUrl']
+          'deled': '_evalUrl'
         }
       },
       '2.0.0b2': {
         'jQuery': {
-          'deled': ['_evalUrl']
+          'deled': '_evalUrl'
         }
       },
       '2.0.0b1': {
         'jQuery': {
-          'added': ['cache', 'noData'],
-          'deled': ['_evalUrl']
+          'added': 'cache/noData',
+          'deled': '_evalUrl'
         }
       },
       '1.9.0b1': {
         'jQuery': {
-          'added': ['clean'],
-          'deled': ['buildFragment']
+          'added': 'clean',
+          'deled': 'buildFragment'
         },
         'jQuery.fn': {
-          'added': ['die', 'live'],
-          'deled': ['finish']
+          'added': 'die/live',
+          'deled': 'finish'
         }
       },
       '1.8rc1': {
         'jQuery': {
-          'deled': ['attrFn']
+          'deled': 'attrFn'
         }
       },
       '1.8b2': {
         'jQuery': {
-          'deled': ['attrFn']
+          'deled': 'attrFn'
         }
       },
       '1.8b1': {
         'jQuery': {
-          'added': ['cssExpand']
+          'added': 'cssExpand'
         }
       },
       '1.7b1': {
         'jQuery': {
-          'added': ['attrFix', 'isNaN'],
-          'deled': ['isNumeric']
+          'added': 'attrFix/isNaN',
+          'deled': 'isNumeric'
         }
       },
       '1.5rc1': {
         'jQuery': {
-          'added': ['subclass'],
-          'deled': ['sub']
+          'added': 'subclass',
+          'deled': 'sub'
         }
       },
       '1.5b1': {
         'jQuery': {
-          'added': ['subclass'],
-          'deled': ['_data', 'clone', 'sub']
+          'added': 'subclass',
+          'deled': '_data/clone/sub'
         }
       },
       '1.4.4': {
         'jQuery': {
-          'added': ['acceptData', 'access', 'buildFragment', 'camelCase', 'cleanData', 'cssHooks', 'cssNumber', 'cssProps', 'error', 'handleComplete', 'handleSuccess', 'isNaN', 'isWindow', 'now', 'parseJSON', 'readyWait', 'removeEvent', 'text', 'triggerGlobal', 'type', 'uuid'],
-          'deled': ['getText']
+          'added': 'acceptData/access/buildFragment/camelCase/cleanData/cssHooks/cssNumber/cssProps/error/handleComplete/handleSuccess/isNaN/isWindow/now/parseJSON/readyWait/removeEvent/text/triggerGlobal/type/uuid',
+          'deled': 'getText'
         },
         'jQuery.fn': {
-          'added': ['delegate', 'fadeToggle', 'undelegate'],
-          'deled': ['_load', 'setArray']
+          'added': 'delegate/fadeToggle/undelegate',
+          'deled': '_load/setArray'
         }
       },
       '1.4.4rc3': {
         'jQuery': {
-          'added': ['acceptData', 'access', 'buildFragment', 'camelCase', 'cleanData', 'cssHooks', 'cssNumber', 'cssProps', 'error', 'handleComplete', 'handleSuccess', 'isNaN', 'isWindow', 'now', 'parseJSON', 'readyWait', 'removeEvent', 'text', 'triggerGlobal', 'type', 'uuid'],
-          'deled': ['getText']
+          'added': 'acceptData/access/buildFragment/camelCase/cleanData/cssHooks/cssNumber/cssProps/error/handleComplete/handleSuccess/isNaN/isWindow/now/parseJSON/readyWait/removeEvent/text/triggerGlobal/type/uuid',
+          'deled': 'getText'
         },
         'jQuery.fn': {
-          'added': ['delegate', 'fadeToggle', 'undelegate'],
-          'deled': ['_load', 'setArray']
+          'added': 'delegate/fadeToggle/undelegate',
+          'deled': '_load/setArray'
         }
       },
       '1.4.4rc2': {
         'jQuery': {
-          'added': ['acceptData', 'access', 'buildFragment', 'camelCase', 'cleanData', 'cssHooks', 'cssNumber', 'cssProps', 'error', 'handleComplete', 'handleSuccess', 'isNaN', 'isWindow', 'now', 'parseJSON', 'readyWait', 'removeEvent', 'text', 'triggerGlobal', 'type', 'uuid'],
-          'deled': ['getText']
+          'added': 'acceptData/access/buildFragment/camelCase/cleanData/cssHooks/cssNumber/cssProps/error/handleComplete/handleSuccess/isNaN/isWindow/now/parseJSON/readyWait/removeEvent/text/triggerGlobal/type/uuid',
+          'deled': 'getText'
         },
         'jQuery.fn': {
-          'added': ['delegate', 'fadeToggle', 'undelegate'],
-          'deled': ['_load', 'setArray']
+          'added': 'delegate/fadeToggle/undelegate',
+          'deled': '_load/setArray'
         }
       },
       '1.4.4rc1': {
         'jQuery': {
-          'added': ['acceptData', 'access', 'buildFragment', 'camelCase', 'cleanData', 'cssHooks', 'cssNumber', 'cssProps', 'error', 'handleComplete', 'handleSuccess', 'isNaN', 'isWindow', 'now', 'parseJSON', 'readyWait', 'removeEvent', 'text', 'triggerGlobal', 'type', 'uuid'],
-          'deled': ['getText']
+          'added': 'acceptData/access/buildFragment/camelCase/cleanData/cssHooks/cssNumber/cssProps/error/handleComplete/handleSuccess/isNaN/isWindow/now/parseJSON/readyWait/removeEvent/text/triggerGlobal/type/uuid',
+          'deled': 'getText'
         },
         'jQuery.fn': {
-          'added': ['delegate', 'fadeToggle', 'undelegate'],
-          'deled': ['_load', 'setArray']
+          'added': 'delegate/fadeToggle/undelegate',
+          'deled': '_load/setArray'
         }
       },
       '1.4.3': {
         'jQuery': {
-          'added': ['acceptData', 'access', 'buildFragment', 'camelCase', 'cleanData', 'cssHooks', 'cssNumber', 'cssProps', 'error', 'handleComplete', 'handleSuccess', 'isNaN', 'isWindow', 'now', 'parseJSON', 'readyWait', 'removeEvent', 'text', 'triggerGlobal', 'type', 'uuid'],
-          'deled': ['getText']
+          'added': 'acceptData/access/buildFragment/camelCase/cleanData/cssHooks/cssNumber/cssProps/error/handleComplete/handleSuccess/isNaN/isWindow/now/parseJSON/readyWait/removeEvent/text/triggerGlobal/type/uuid',
+          'deled': 'getText'
         },
         'jQuery.fn': {
-          'added': ['delegate', 'undelegate'],
-          'deled': ['_load', 'setArray']
+          'added': 'delegate/undelegate',
+          'deled': '_load/setArray'
         }
       },
       '1.4.3rc2': {
         'jQuery': {
-          'added': ['acceptData', 'access', 'buildFragment', 'camelCase', 'cleanData', 'cssHooks', 'cssNumber', 'cssProps', 'error', 'handleComplete', 'handleSuccess', 'isNaN', 'isWindow', 'now', 'parseJSON', 'readyWait', 'removeEvent', 'text', 'triggerGlobal', 'type', 'uuid'],
-          'deled': ['getText']
+          'added': 'acceptData/access/buildFragment/camelCase/cleanData/cssHooks/cssNumber/cssProps/error/handleComplete/handleSuccess/isNaN/isWindow/now/parseJSON/readyWait/removeEvent/text/triggerGlobal/type/uuid',
+          'deled': 'getText'
         },
         'jQuery.fn': {
-          'added': ['delegate', 'undelegate'],
-          'deled': ['_load', 'setArray']
+          'added': 'delegate/undelegate',
+          'deled': '_load/setArray'
         }
       },
       '1.4.3rc1': {
         'jQuery': {
-          'added': ['acceptData', 'access', 'buildFragment', 'camelCase', 'cleanData', 'cssHooks', 'cssNumber', 'cssProps', 'error', 'handleComplete', 'handleSuccess', 'isNaN', 'isWindow', 'now', 'parseJSON', 'readyWait', 'removeEvent', 'text', 'triggerGlobal', 'type', 'uuid'],
-          'deled': ['getText']
+          'added': 'acceptData/access/buildFragment/camelCase/cleanData/cssHooks/cssNumber/cssProps/error/handleComplete/handleSuccess/isNaN/isWindow/now/parseJSON/readyWait/removeEvent/text/triggerGlobal/type/uuid',
+          'deled': 'getText'
         },
         'jQuery.fn': {
-          'added': ['delegate', 'undelegate'],
-          'deled': ['_load', 'setArray']
+          'added': 'delegate/undelegate',
+          'deled': '_load/setArray'
         }
       },
       '1.4.2': {
         'jQuery': {
-          'added': ['cleanData', 'error', 'parseJSON', 'text'],
-          'deled': ['getText']
+          'added': 'cleanData/error/parseJSON/text',
+          'deled': 'getText'
         },
         'jQuery.fn': {
-          'added': ['delegate', 'undelegate'],
-          'deled': ['_load', 'setArray']
+          'added': 'delegate/undelegate',
+          'deled': '_load/setArray'
         }
       },
       '1.4.1': {
         'jQuery': {
-          'added': ['cleanData', 'error', 'parseJSON']
+          'added': 'cleanData/error/parseJSON'
         }
       },
       '1.4rc1': {
         'jQuery.fn': {
-          'deled': ['focusin', 'focusout']
+          'deled': 'focusin/focusout'
         }
       },
       '1.4a2': {
         'jQuery': {
-          'deled': ['guid', 'noop', 'proxy', 'uaMatch']
+          'deled': 'guid/noop/proxy/uaMatch'
         },
         'jQuery.fn': {
-          'deled': ['focusin', 'focusout']
+          'deled': 'focusin/focusout'
         }
       },
       '1.4a1': {
         'jQuery': {
-          'added': ['isObjectLiteral', 'readyList'],
-          'deled': ['attrFn', 'bindReady', 'contains', 'getText', 'guid', 'isPlainObject', 'noData', 'noop', 'proxy', 'uaMatch']
+          'added': 'isObjectLiteral/readyList',
+          'deled': 'attrFn/bindReady/contains/getText/guid/isPlainObject/noData/noop/proxy/uaMatch'
         },
         'jQuery.fn': {
-          'deled': ['focusin', 'focusout', 'has']
+          'deled': 'focusin/focusout/has'
         }
       },
       '1.3.2': {
         'jQuery': {
-          'deled': ['timerId']
+          'deled': 'timerId'
         },
         'jQuery.fn': {
-          'added': ['sort', 'splice']
+          'added': 'sort/splice'
         }
       },
       '1.3.1': {
         'jQuery': {
-          'deled': ['timerId']
+          'deled': 'timerId'
         }
       },
       '1.3.1rc1': {
         'jQuery': {
-          'deled': ['timerId']
+          'deled': 'timerId'
         }
       },
       '1.3b2': {
         'jQuery.fn': {
-          'deled': ['push']
+          'deled': 'push'
         }
       },
       '1.3b1': {
         'jQuery': {
-          'deled': ['Event', 'dequeue', 'queue']
+          'deled': 'Event/dequeue/queue'
         },
         'jQuery.fn': {
-          'deled': ['push']
+          'deled': 'push'
         }
       },
       '1.2.6': {
         'jQuery': {
-          'added': ['timerId'],
-          'deled': ['styleFloat']
+          'added': 'timerId',
+          'deled': 'styleFloat'
         },
         'jQuery.fn': {
-          'added': ['_load', 'data', 'eq', 'innerHeight', 'innerWidth', 'offsetParent', 'outerHeight', 'outerWidth', 'position', 'removeData', 'scrollLeft', 'scrollTop']
+          'added': '_load/data/eq/innerHeight/innerWidth/offsetParent/outerHeight/outerWidth/position/removeData/scrollLeft/scrollTop'
         }
       },
       '1.2.5': {
         'jQuery': {
-          'added': ['timerId'],
-          'deled': ['styleFloat']
+          'added': 'timerId',
+          'deled': 'styleFloat'
         },
         'jQuery.fn': {
-          'added': ['_load', 'data', 'eq', 'innerHeight', 'innerWidth', 'offsetParent', 'outerHeight', 'outerWidth', 'position', 'removeData', 'scrollLeft', 'scrollTop']
+          'added': '_load/data/eq/innerHeight/innerWidth/offsetParent/outerHeight/outerWidth/position/removeData/scrollLeft/scrollTop'
         }
       },
       '1.2.4': {
         'jQuery': {
-          'deled': ['styleFloat']
+          'deled': 'styleFloat'
         },
         'jQuery.fn': {
-          'added': ['data', 'eq', 'innerHeight', 'innerWidth', 'outerHeight', 'outerWidth', 'removeData']
+          'added': 'data/eq/innerHeight/innerWidth/outerHeight/outerWidth/removeData'
         }
       },
       '1.2.4b': {
         'jQuery': {
-          'deled': ['styleFloat']
+          'deled': 'styleFloat'
         },
         'jQuery.fn': {
-          'added': ['data', 'eq', 'innerHeight', 'innerWidth', 'outerHeight', 'outerWidth', 'removeData']
+          'added': 'data/eq/innerHeight/innerWidth/outerHeight/outerWidth/removeData'
         }
       },
       '1.2.4a': {
         'jQuery': {
-          'deled': ['styleFloat']
+          'deled': 'styleFloat'
         },
         'jQuery.fn': {
-          'added': ['data', 'eq', 'innerHeight', 'innerWidth', 'outerHeight', 'outerWidth', 'removeData']
+          'added': 'data/eq/innerHeight/innerWidth/outerHeight/outerWidth/removeData'
         }
       },
       '1.2.3': {
         'jQuery': {
-          'deled': ['styleFloat']
+          'deled': 'styleFloat'
         },
         'jQuery.fn': {
-          'added': ['data', 'eq', 'removeData']
+          'added': 'data/eq/removeData'
         }
       },
       '1.2.3b': {
         'jQuery': {
-          'deled': ['styleFloat']
+          'deled': 'styleFloat'
         },
         'jQuery.fn': {
-          'added': ['data', 'eq', 'removeData']
+          'added': 'data/eq/removeData'
         }
       },
       '1.2.3a': {
         'jQuery': {
-          'deled': ['styleFloat']
+          'deled': 'styleFloat'
         },
         'jQuery.fn': {
-          'added': ['eq']
+          'added': 'eq'
         }
       },
       '1.2.2': {
         'jQuery': {
-          'deled': ['styleFloat']
+          'deled': 'styleFloat'
         },
         'jQuery.fn': {
-          'added': ['eq']
+          'added': 'eq'
         }
       },
       '1.2.2b2': {
         'jQuery': {
-          'deled': ['styleFloat']
+          'deled': 'styleFloat'
         },
         'jQuery.fn': {
-          'added': ['eq']
+          'added': 'eq'
         }
       },
       '1.2.2b': {
         'jQuery': {
-          'deled': ['ready', 'readyList', 'styleFloat']
+          'deled': 'ready/readyList/styleFloat'
         },
         'jQuery.fn': {
-          'added': ['eq']
+          'added': 'eq'
         }
       },
       '1.2.1': {
         'jQuery.fn': {
-          'added': ['eq']
+          'added': 'eq'
         }
       },
       '1.1.4': {
         'jQuery': {
-          'added': ['classFilter', 'isXMLDoc', 'mergeNum', 'nodeName', 'props', 'styleFloat', 'timers', 'unique'],
-          'deled': ['getAll', 'safariTimer', 'token']
+          'added': 'classFilter/isXMLDoc/mergeNum/nodeName/props/styleFloat/timers/unique',
+          'deled': 'getAll/safariTimer/token'
         },
         'jQuery.fn': {
-          'added': ['init', 'slice']
+          'added': 'init/slice'
         }
       },
       '1.1.3': {
         'jQuery': {
-          'added': ['chars', 'classFilter', 'isXMLDoc', 'mergeNum', 'nodeName', 'props', 'styleFloat', 'timers', 'unique'],
-          'deled': ['getAll', 'token']
+          'added': 'chars/classFilter/isXMLDoc/mergeNum/nodeName/props/styleFloat/timers/unique',
+          'deled': 'getAll/token'
         },
         'jQuery.fn': {
-          'added': ['init']
+          'added': 'init'
         }
       },
       '1.1.3a': {
         'jQuery': {
-          'added': ['chars', 'classFilter', 'isXMLDoc', 'mergeNum', 'nodeName', 'timers', 'unique'],
-          'deled': ['getAll']
+          'added': 'chars/classFilter/isXMLDoc/mergeNum/nodeName/timers/unique',
+          'deled': 'getAll'
         },
         'jQuery.fn': {
-          'added': ['init']
+          'added': 'init'
         }
       },
       '1.1.2': {
         'jQuery': {
-          'added': ['isXMLDoc', 'nodeName']
+          'added': 'isXMLDoc/nodeName'
         }
       },
       '1.1.1': {
         'jQuery': {
-          'added': ['nodeName']
+          'added': 'nodeName'
         }
       },
       '1.1b': {
         'jQuery': {
-          'deled': ['isFunction']
+          'deled': 'isFunction'
         }
       },
       '1.1a': {
         'jQuery': {
-          'deled': ['isFunction', 'multiFilter']
+          'deled': 'isFunction/multiFilter'
         },
         'jQuery.fn': {
-          'added': ['set'],
-          'deled': ['height', 'pushStack', 'width']
+          'added': 'set',
+          'deled': 'height/pushStack/width'
         }
       },
       '1.0.4': {
         'jQuery': {
-          'added': ['getJSON', 'globalEval', 'safariTimer'],
-          'deled': ['setAuto']
+          'added': 'getJSON/globalEval/safariTimer',
+          'deled': 'setAuto'
         },
         'jQuery.fn': {
-          'added': ['ajaxSend', 'evalScripts', 'serialize', 'set']
+          'added': 'ajaxSend/evalScripts/serialize/set'
         }
       },
       '1.0.3': {
         'jQuery': {
-          'added': ['getJSON', 'safariTimer']
+          'added': 'getJSON/safariTimer'
         },
         'jQuery.fn': {
-          'added': ['evalScripts', 'serialize']
+          'added': 'evalScripts/serialize'
         }
       },
       '1.0.2': {
         'jQuery': {
-          'added': ['getJSON', 'safariTimer']
+          'added': 'getJSON/safariTimer'
         },
         'jQuery.fn': {
-          'added': ['serialize']
+          'added': 'serialize'
         }
       }
     };
@@ -593,12 +599,12 @@ exports.evaluator = function (win) {
 
     function applyDiff(bd, df, key) {
       if ('added' in df[key]) {
-        bd[key] = bd[key].split('/').concat(df[key].added).sort().join('/');
+        bd[key] = (bd[key] + '/' + df[key].added).split('/').sort().join('/');
       }
 
       if ('deled' in df[key]) {
         bd[key] = '/' + bd[key] + '/';
-        df[key].deled.forEach(function (k) {
+        df[key].deled.split('/').forEach(function (k) {
           bd[key] = bd[key].replace('/' + k + '/', '/');
         });
       }
@@ -661,10 +667,9 @@ exports.evaluator = function (win) {
       if (('jQuery' in ret) || ('fn' in ret)) {
         ret.key = jqk;
         ret.ver = ver;
-        return ret;
       }
 
-      return {};
+      return ret;
     });
   }
 };
