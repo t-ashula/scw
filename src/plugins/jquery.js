@@ -84,51 +84,120 @@ exports.evaluator = function (win) {
       return [];
     }
 
-    ds.forEach(function (d) {
-      cands.filter(function (c) {
-        return d.test(win[c]);
-      }).map(function (c) {
-        return {
-          'name': d.name,
-          'info': d.info(win[c]),
-          'parent': {
-            'name': c,
-            'ver': win[c].fn.jquery
-          }
-        };
-      }).forEach(function (p) {
-        ps.push(p);
-      });
+    cands.forEach(function (c) {
+      ps = ps.concat(
+        ds.filter(function (d) {
+          return d.test(win[c], win);
+        }).map(function (d) {
+          return {
+            'name': d.name,
+            'info': d.info(win[c]),
+            'parent': {
+              'name': c,
+              'ver': win[c].fn.jquery
+            }
+          };
+        })
+      );
     });
 
     return ps;
   }
 
   function initDetectors() {
-    function d(n, t, i) {
-      return {
-        name: n,
-        test: t,
-        info: i
-      };
-    }
     var ds = [];
-    ds.push(
-      d('migrate', function ($) {
-        return ('migrateTrace' in $);
-      }, function ($) {
+    ds.push({
+      name: 'migrate',
+      test: function ($) {
+        return 'migrateTrace' in $;
+      },
+      info: function ($) {
         return {
-          'version': 'N/A'
+          'url': 'https://github.com/jquery/jquery-migrate/'
         };
-      }),
-      d('prettyPhoto', function ($) {
+      }
+    });
+    ds.push({
+      name: 'prettyPhoto',
+      test: function ($) {
         return 'prettyPhoto' in $ && 'prettyPhoto' in $.fn;
-      }, function ($) {
+      },
+      info: function ($) {
         return {
-          'version': $.prettyPhoto.version
+          'version': $.prettyPhoto.version,
+          'url': 'http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone/'
         };
-      })
-    );
+      }
+    });
+    ds.push({
+      name: 'pageScroller',
+      test: function ($, w) {
+        return 'top' in $.fn && 'left' in $.fn && 'coliss' in w && 'pageScroll' in w.coliss;
+      },
+      info: function ($) {
+        return {
+          'url': 'http://coliss.com/articles/build-websites/operation/javascript/296.html'
+        };
+      }
+    });
+    ds.push({
+      name: 'colorbox',
+      test: function ($) {
+        return 'colorbox' in $ && 'colorbox' in $.fn;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/jackmoore/colorbox/'
+        };
+      }
+    });
+    ds.push({
+      name: 'Camera Slideshow',
+      test: function ($) {
+        return ['camera', 'cameraPause', 'cameraResume', 'cameraStop'].every(function (c) {
+          return c in $.fn;
+        });
+      },
+      info: function ($) {
+        return {
+          'url': 'http://www.pixedelic.com/plugins/camera/'
+        };
+      }
+    });
+    ds.push({
+      name: 'jScrollPane',
+      test: function ($) {
+        return 'jScrollPane' in $.fn;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/vitch/jScrollPane/'
+        };
+      }
+    });
+    ds.push({
+      name: 'jQuery Easing',
+      test: function ($) {
+        return 'easing' in $ && 'def' in $.easing && 'jswing' in $.easing;
+      },
+      info: function ($) {
+        return {
+          'url': 'http://gsgd.co.uk/sandbox/jquery/easing/'
+        };
+      }
+    });
+    ds.push({
+      name: 'jQuery Mouse Wheel',
+      test: function ($) {
+        return 'mousewheel' in $.fn && 'unmousewheel' in $.fn;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/brandonaaron/jquery-mousewheel/'
+        };
+      }
+    });
+
     return ds;
   }
 
