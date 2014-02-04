@@ -75,7 +75,7 @@ describe('plugin jquery-related detector', function () {
         plugins: [{
           'name': 'migrate',
           'info': {
-            'version': 'N/A'
+            'url' : 'https://github.com/jquery/jquery-migrate/'
           },
           'parent': {
             'name': 'jQuery',
@@ -106,6 +106,7 @@ describe('plugin jquery-related detector', function () {
         plugins: [{
           'name': 'prettyPhoto',
           'info': {
+            'url' : 'http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone/',
             'version': '3.1.4'
           },
           'parent': {
