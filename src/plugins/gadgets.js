@@ -12,7 +12,7 @@ exports.evaluator = function (win) {
     }
 
     d = {
-      'gadgets' : detectGadgets(win)
+      'gadgets': detectGadgets(win)
     };
   }
   catch (ee) {
@@ -23,8 +23,30 @@ exports.evaluator = function (win) {
 
   return d;
 
+  function initDetectors() {
+    var ds = [];
+    ds.push({
+      'name': 's_code',
+      'test': function (w) {
+        return 's_code' in w;
+      },
+      'info': function (w) {
+        return {};
+      }
+    });
+    return ds;
+  }
+
   function detectGadgets(win) {
-    
-    return [];
+    return initDetectors()
+      .filter(function (d) {
+        return d.test(win);
+      })
+      .map(function (d) {
+        return {
+          name: d.name,
+          info: d.info(win)
+        };
+      });
   }
 };
