@@ -197,7 +197,54 @@ exports.evaluator = function (win) {
         };
       }
     });
-
+    ds.push({
+      name: 'jQuery UI',
+      test: function ($) {
+        return 'ui' in $;
+      },
+      info: function ($) {
+        return {
+          'url': 'http://jqueryui.com/',
+          'version': $.ui.version
+        };
+      }
+    });
+    ds.push({
+      name: 'jQuery Alert Dialog',
+      test: function ($) {
+        return 'alerts' in $ && typeof $.alerts === 'object';
+      },
+      info: function ($) {
+        return {
+          'url': 'http://abeautifulsite.net/'
+        };
+      }
+    });
+    ds.push({
+      name: 'jGrowl',
+      test: function ($) {
+        return 'jGrowl' in $ && 'jGrowl' in $.fn;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/stanlemon/jGrowl/'
+        };
+      }
+    });
+    ds.push({
+      name: 'jQuery Cycle Plugin',
+      test: function ($) {
+        return 'cycle' in $.fn && typeof $.fn.cycle === 'function';
+      },
+      info: function ($) {
+        return {
+          'url': 'http://jquery.malsup.com/cycle/',
+          'version': typeof $.fn.cycle.ver === 'function' ? $.fn.cycle.ver() : 'N/A'
+        };
+      }
+    });
+    
+    
     return ds;
   }
 

@@ -57,7 +57,6 @@ exports.evaluator = function (win) {
     ds.push(simpleDetector('YUI3', ['YUI', 'version']));
     ds.push(simpleDetector('YUI2', ['YAHOO', 'VERSION']));
     ds.push(simpleDetector('ExtJS', ['Ext', 'versions', 'extjs', 'version']));
-
     ds.push(detector('swfobject.js', function (w) {
       var key1 = 'deconcept',
         key2 = 'swfobject',
@@ -74,6 +73,18 @@ exports.evaluator = function (win) {
         return {
           version: ver1
         };
+      }
+      return undef;
+    }));
+
+    ds.push(detector('ThickBox', function(w) {
+      var tbFuncs = ['tb_detectMacXFF', 'tb_getPageSize', 'tb_init', 'tb_parseQuery', 'tb_position', 'tb_remove', 'tb_show', 'tb_showIframe'];
+      if(tbFuncs.every(function(f){ return isFunctionExist(w, f); })) {
+        if (isDefined(w, 'tb_pathToImage') ) {
+          return {
+            version: 'N/A'
+          };
+        }
       }
       return undef;
     }));
