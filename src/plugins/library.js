@@ -1,7 +1,7 @@
 // plugins/libraries.js
 'use strict';
 
-exports.name = 'libraries';
+exports.name = 'library';
 exports.desc = 'detect libraries page use';
 exports.evaluator = function (win) {
   var d,
@@ -56,7 +56,7 @@ exports.evaluator = function (win) {
     ds.push(simpleDetector('MooTools', ['MooTools', 'version']));
     ds.push(simpleDetector('YUI3', ['YUI', 'version']));
     ds.push(simpleDetector('YUI2', ['YAHOO', 'VERSION']));
-    ds.push(simpleDetector('ExtJS', ['Ext','versions','extjs','version']));
+    ds.push(simpleDetector('ExtJS', ['Ext', 'versions', 'extjs', 'version']));
 
     ds.push(detector('swfobject.js', function (w) {
       var key1 = 'deconcept',

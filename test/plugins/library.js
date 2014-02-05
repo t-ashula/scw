@@ -1,7 +1,7 @@
 // libraries.js
 'use strict';
 var assert = require('power-assert'),
-  libs = require(__dirname + '/../../src/plugins/libraries.js');
+  libs = require(__dirname + '/../../src/plugins/library.js');
 
 describe('plugin libraris detector', function () {
   it('plugin', function (done) {
@@ -13,7 +13,7 @@ describe('plugin libraris detector', function () {
   });
 
   it('has name', function (done) {
-    var expect = 'libraries',
+    var expect = 'library',
       actual = libs.name,
       message = 'libs.name should "libraries"';
     assert.equal(actual, expect, message);
@@ -271,8 +271,7 @@ describe('plugin libraris detector', function () {
 
     it('detect YUI3', function (done) {
       var window = {
-        'YUI': function(){
-        }
+        'YUI': function () {}
       };
       window.YUI.version = '3.14.1';
 
@@ -291,7 +290,7 @@ describe('plugin libraris detector', function () {
     it('detect YUI2', function (done) {
       var window = {
         'YAHOO': {
-          'VERSION' : '2.9.0'
+          'VERSION': '2.9.0'
         }
       };
 
@@ -308,7 +307,15 @@ describe('plugin libraris detector', function () {
     });
 
     it('detect ExtJS', function (done) {
-      var window = { Ext : { versions : { extjs: { version : '4.1.1.1' } } } };
+      var window = {
+        Ext: {
+          versions: {
+            extjs: {
+              version: '4.1.1.1'
+            }
+          }
+        }
+      };
       var expect = {
         libs: [{
           name: 'ExtJS',
@@ -322,7 +329,13 @@ describe('plugin libraris detector', function () {
     });
 
     it('detect jQuery UI', function (done) {
-      var window = { jQuery : { ui : { version : '1.10.3' } } };
+      var window = {
+        jQuery: {
+          ui: {
+            version: '1.10.3'
+          }
+        }
+      };
       var expect = {
         libs: [{
           name: 'jQuery UI',
@@ -336,7 +349,13 @@ describe('plugin libraris detector', function () {
     });
 
     it('detect jQuery Mobile', function (done) {
-      var window = { jQuery : { mobile : { version : '1.4.0' } } };
+      var window = {
+        jQuery: {
+          mobile: {
+            version: '1.4.0'
+          }
+        }
+      };
       var expect = {
         libs: [{
           name: 'jQuery Mobile',
