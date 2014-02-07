@@ -243,8 +243,51 @@ exports.evaluator = function (win) {
         };
       }
     });
-    
-    
+    ds.push({
+      name: 'carouFredSel',
+      test: function ($) {
+        return 'caroufredsel' in $.fn && 'carouFredSel' in $.fn && typeof $.fn.carouFredSel === 'function';
+      },
+      info: function ($) {
+        return {
+          'url': 'http://dev7studios.com/plugins/caroufredsel'
+        };
+      }
+    });
+    ds.push({
+      name: 'jQuery Templates Plugin',
+      test: function ($) {
+        return ['tmpl','template','tmplItem'].every(function(f){ return f in $.fn && f in $; });
+      },
+      info: function ($) {
+        return {
+          'url': 'http://github.com/jquery/jquery-tmpl'
+        };
+      }
+    });
+    ds.push({
+      name: 'jquery-plugin-query-object',
+      test: function ($) {
+        return 'query' in $ && 'keys' in $.query;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/alrusdi/jquery-plugin-query-object'
+        };
+      }
+    });
+    ds.push({
+      name: 'Background position animation for jQuery',
+      test: function ($) {
+        return 'Tween' in $ && 'propHooks' in $.Tween && 'backgroundPosition' in $.Tween.propHooks;
+      },
+      info: function ($) {
+        return {
+          'url': 'http://keith-wood.name/backgroundPos.html'
+        };
+      }
+    });
+
     return ds;
   }
 
