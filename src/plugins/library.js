@@ -88,6 +88,14 @@ exports.evaluator = function (win) {
       }
       return undef;
     }));
+    ds.push(detector('DivinePlayer', function(w){
+      if('DivinePlayer' in w) {
+        return {
+          version: 'N/A'
+        };
+      }
+      return undef;
+    }));
 
     return ds;
   }
