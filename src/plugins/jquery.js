@@ -287,6 +287,17 @@ exports.evaluator = function (win) {
         };
       }
     });
+    ds.push({
+      name: 'jQuery Fly Side Menu',
+      test: function ($) { 
+        return 'fly_sidemenu' in $.fn && 'toggleMenu' in $.fn;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/peachananr/fly_sidemenu'
+        };
+      }
+    });
 
     return ds;
   }
