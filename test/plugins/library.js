@@ -59,7 +59,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'jQuery',
-          version: '1.8.3'
+          info : {
+            version: '1.8.3',
+            url: 'http://jquery.com'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -77,7 +80,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'Prototype.js',
-          version: '1.7.1'
+          info : {
+            version: '1.7.1',
+            url: 'http://prototypejs.org'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -101,7 +107,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'Angular.js',
-          version: '1.2.6'
+          info: {
+            version: '1.2.6',
+            url: 'http://angularjs.org'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -119,7 +128,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'Backbone.js',
-          version: '1.1.0'
+          info: {
+            version: '1.1.0',
+            url: 'http://backbonejs.org'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -136,7 +148,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'underscore.js',
-          version: '1.4.3'
+          info : {
+            version: '1.4.3',
+            url: 'http://underscorejs.org'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -155,7 +170,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'swfobject.js',
-          version: '2.x'
+          info: {
+            version: '2.x',
+            url: 'http://code.google.com/p/swfobject/'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -174,7 +192,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'swfobject.js',
-          version: '1.5.x'
+          info : {
+            version: '1.5.x',
+            url: 'http://blog.deconcept.com/swfobject/'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -193,7 +214,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'Modernizr',
-          version: '2.7.1'
+          info : {
+            version: '2.7.1',
+            url: 'http://modernizr.com/'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -222,11 +246,14 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'Dojo',
-          version: '1.9.0 (NaN)'
+          info: {
+            version: '1.9.0 (NaN)',
+            url: 'http://dojotoolkit.org/'
+          }          
         }]
       },
         actual = libs.evaluator(window),
-        message = 'libs.evaluator detect Modernizr.js ';
+        message = 'libs.evaluator detect Dojo.js ';
       assert.deepEqual(actual, expect, message);
       done();
     });
@@ -241,7 +268,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'script.aculo.us',
-          version: '1.8.1'
+          info: {
+            version: '1.8.1',
+            url: 'http://script.aculo.us/'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -260,7 +290,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'MooTools',
-          version: '1.3dev'
+          info: {
+            version: '1.3dev',
+            url: 'http://mootools.net/'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -278,7 +311,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'YUI3',
-          version: '3.14.1'
+          info : {
+            version: '3.14.1',
+            url: 'http://yuilibrary.com/projects/yui3/'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -297,7 +333,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'YUI2',
-          version: '2.9.0'
+          info: {
+            version: '2.9.0',
+            url: 'http://yuilibrary.com/projects/yui2/'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -319,7 +358,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'ExtJS',
-          version: '4.1.1.1'
+          info : {
+            version: '4.1.1.1',
+            url: 'http://www.sencha.com/products/extjs/'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -339,7 +381,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'jQuery UI',
-          version: '1.10.3'
+          info : {
+            version: '1.10.3',
+            url: 'http://jqueryui.com/'
+          }
         }]
       },
         actual = libs.evaluator(window),
@@ -359,7 +404,10 @@ describe('plugin libraris detector', function () {
       var expect = {
         libs: [{
           name: 'jQuery Mobile',
-          version: '1.4.0'
+          info : {
+            version: '1.4.0',
+            url: 'http://jquerymobile.com/'
+          }
         }]
       },
         actual = libs.evaluator(window),
