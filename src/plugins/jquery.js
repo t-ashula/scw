@@ -115,6 +115,10 @@ exports.evaluator = function (win) {
         return {
           'url': 'https://github.com/jquery/jquery-migrate/'
         };
+      },
+      provides: {
+        'jQuery': ['attrFn', 'browser', 'clean', 'migrateReset', 'migrateTrace', 'migrateWarnings', 'sub', 'uaMatch'],
+        'jQuery.fn': ['die', 'live']
       }
     });
     ds.push({
@@ -814,25 +818,43 @@ exports.evaluator = function (win) {
         fns = Object.keys(jq.fn).sort(),
         ver = jq.fn.jquery,
         dict = getDict(ver),
-        ret = {}, t, d;
+        ret = {}, ts, d;
       if ('jQuery' in dict) {
         d = dict.jQuery.split('/');
-        t = ks.filter(function (k) {
+        ts = ks.filter(function (k) {
           return d.indexOf(k) === -1;
         });
-        if (t.length > 0) {
-          ret.jQuery = t;
-        }
+        if (ts.length > 0) {
+          ds.filter(function(d){
+            return 'provides' in d && 'jQuery' in d.provides;
+          }).forEach(function(d){
+            ts = ts.map(function(t) {
+              return d.provides.jQuery.indexOf(t)!==-1 ?
+                t = '*' + t :
+                t;
+            });
+          });
+          ret.jQuery = ts;
+        }        
       }
 
       if ('jQuery.fn' in dict) {
         d = dict['jQuery.fn'].split('/');
-        t = fns.filter(function (k) {
+        ts = fns.filter(function (k) {
           return d.indexOf(k) === -1;
         });
 
-        if (t.length > 0) {
-          ret.fn = t;
+        if (ts.length > 0) {
+          ds.filter(function(d){
+            return 'provides' in d && 'jQuery.fn' in d.provides;
+          }).forEach(function(d){
+            ts = ts.map(function(t) {
+              return d.provides['jQuery.fn'].indexOf(t)!==-1 ?
+                t = '*' + t :
+                t;
+            });
+          });
+          ret.fn = ts;
         }
       }
 
