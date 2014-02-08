@@ -35,7 +35,7 @@ exports.initializer = function (win) {
   /**/
 };
 exports.evaluator = function (win) {
-  var d, r, j, cands,
+  var d, r, j, cands, ds,
     undef = void 0;
   try {
     if (win === void 0) {
@@ -52,10 +52,11 @@ exports.evaluator = function (win) {
       });
     }
 
+    ds = initDetectors();
     cands = getJqueryKeys(win);
     d = {
-      'plugins': detectJqueryPlugins(win, cands),
-      'extras': getExtraKeys(win, cands),
+      'plugins': detectJqueryPlugins(win, cands, ds),
+      'extras': getExtraKeys(win, cands, ds),
       'jqueries': j
     };
 
@@ -77,11 +78,10 @@ exports.evaluator = function (win) {
     return Object.prototype.toString.call(o);
   }
 
-  function detectJqueryPlugins(win, cands) {
-    var ds = initDetectors(),
-      ps = [];
+  function detectJqueryPlugins(win, cands, ds) {
+    var ps = [];
     if (cands.length < 1) {
-      return [];
+      return ps;
     }
 
     cands.forEach(function (c) {
@@ -257,7 +257,9 @@ exports.evaluator = function (win) {
     ds.push({
       name: 'jQuery Templates Plugin',
       test: function ($) {
-        return ['tmpl','template','tmplItem'].every(function(f){ return f in $.fn && f in $; });
+        return ['tmpl', 'template', 'tmplItem'].every(function (f) {
+          return f in $.fn && f in $;
+        });
       },
       info: function ($) {
         return {
@@ -289,7 +291,7 @@ exports.evaluator = function (win) {
     });
     ds.push({
       name: 'jQuery Fly Side Menu',
-      test: function ($) { 
+      test: function ($) {
         return 'fly_sidemenu' in $.fn && 'toggleMenu' in $.fn;
       },
       info: function ($) {
@@ -332,7 +334,7 @@ exports.evaluator = function (win) {
     return ret;
   }
 
-  function getExtraKeys(win, jqkeys) {
+  function getDict(ver) {
     var keyDicts = {
       '2.0.0-beta3': {
         'jQuery': {
@@ -780,32 +782,32 @@ exports.evaluator = function (win) {
       }
     }
 
-    function getDict(ver) {
-      ver = ver === '@VERSION' ? '1.8b1' :
-        ver === '$Rev: 509' ? '1.0' : ver;
-      var baseVer = ver.split('.', 2).join('.').replace(/[a-z]+[0-9]*/g, ''),
-        baseDict, diffDict;
-      if (!(baseVer in baseDicts)) {
-        return {};
-      }
+    ver = ver === '@VERSION' ? '1.8b1' :
+      ver === '$Rev: 509' ? '1.0' : ver;
+    var baseVer = ver.split('.', 2).join('.').replace(/[a-z]+[0-9]*/g, ''),
+      baseDict, diffDict;
+    if (!(baseVer in baseDicts)) {
+      return {};
+    }
 
-      baseDict = baseDicts[baseVer];
-      if (!(ver in keyDicts)) {
-        return baseDict;
-      }
-
-      diffDict = keyDicts[ver];
-      if ('jQuery' in diffDict) {
-        applyDiff(baseDict, diffDict, 'jQuery');
-      }
-
-      if ('jQuery.fn' in diffDict) {
-        applyDiff(baseDict, diffDict, 'jQuery.fn');
-      }
-
+    baseDict = baseDicts[baseVer];
+    if (!(ver in keyDicts)) {
       return baseDict;
     }
 
+    diffDict = keyDicts[ver];
+    if ('jQuery' in diffDict) {
+      applyDiff(baseDict, diffDict, 'jQuery');
+    }
+
+    if ('jQuery.fn' in diffDict) {
+      applyDiff(baseDict, diffDict, 'jQuery.fn');
+    }
+
+    return baseDict;
+  }
+
+  function getExtraKeys(win, jqkeys, ds) {
     return jqkeys.map(function (jqk) {
       var jq = win[jqk],
         ks = Object.keys(jq).sort(),
