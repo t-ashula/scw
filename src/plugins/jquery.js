@@ -812,50 +812,39 @@ exports.evaluator = function (win) {
   }
 
   function getExtraKeys(win, jqkeys, ds) {
-    return jqkeys.map(function (jqk) {
-      var jq = win[jqk],
-        ks = Object.keys(jq).sort(),
-        fns = Object.keys(jq.fn).sort(),
-        ver = jq.fn.jquery,
-        dict = getDict(ver),
-        ret = {}, ts, d;
-      if ('jQuery' in dict) {
-        d = dict.jQuery.split('/');
+    function findKeys(dict, dk, ks) {
+      var ts = [];
+      if (dk in dict) {
+        d = dict[dk].split('/');
         ts = ks.filter(function (k) {
           return d.indexOf(k) === -1;
         });
         if (ts.length > 0) {
-          ds.filter(function(d){
-            return 'provides' in d && 'jQuery' in d.provides;
-          }).forEach(function(d){
-            ts = ts.map(function(t) {
-              return d.provides.jQuery.indexOf(t)!==-1 ?
-                t = '*' + t :
-                t;
+          ds.filter(function (d) {
+            return 'provides' in d && dk in d.provides;
+          }).forEach(function (d) {
+            ts = ts.map(function (t) {
+              return d.provides[dk].indexOf(t) !== -1 ? t = '*' + t : t;
             });
           });
-          ret.jQuery = ts;
-        }        
+        }
+      }
+      return ts;
+    }
+
+    return jqkeys.map(function (jqk) {
+      var jq = win[jqk],
+        ver = jq.fn.jquery,
+        dict = getDict(ver),
+        ret = {}, ts;
+      ts = findKeys(dict, 'jQuery', Object.keys(jq).sort());
+      if (ts.length > 0) {
+        ret.jQuery = ts;
       }
 
-      if ('jQuery.fn' in dict) {
-        d = dict['jQuery.fn'].split('/');
-        ts = fns.filter(function (k) {
-          return d.indexOf(k) === -1;
-        });
-
-        if (ts.length > 0) {
-          ds.filter(function(d){
-            return 'provides' in d && 'jQuery.fn' in d.provides;
-          }).forEach(function(d){
-            ts = ts.map(function(t) {
-              return d.provides['jQuery.fn'].indexOf(t)!==-1 ?
-                t = '*' + t :
-                t;
-            });
-          });
-          ret.fn = ts;
-        }
+      ts = findKeys(dict, 'jQuery.fn', Object.keys(jq.fn).sort());
+      if (ts.length > 0) {
+        ret.fn = ts;
       }
 
       if (('jQuery' in ret) || ('fn' in ret)) {
