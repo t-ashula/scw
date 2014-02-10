@@ -131,6 +131,10 @@ exports.evaluator = function (win) {
           'version': $.prettyPhoto.version,
           'url': 'http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone/'
         };
+      },
+      provides: {
+        'jQuery': ['prettyPhoto'],
+        'jQuery.fn': ['prettyPhoto']
       }
     });
     ds.push({
@@ -142,6 +146,9 @@ exports.evaluator = function (win) {
         return {
           'url': 'http://coliss.com/articles/build-websites/operation/javascript/296.html'
         };
+      },
+      provides: {
+        'jQuery.fn': ['top', 'left', 'width', 'height']
       }
     });
     ds.push({
@@ -153,6 +160,10 @@ exports.evaluator = function (win) {
         return {
           'url': 'https://github.com/jackmoore/colorbox/'
         };
+      },
+      provides: {
+        'jQuery': ['colorbox'],
+        'jQuery.fn': ['colorbox']
       }
     });
     ds.push({
@@ -166,6 +177,9 @@ exports.evaluator = function (win) {
         return {
           'url': 'http://www.pixedelic.com/plugins/camera/'
         };
+      },
+      provides: {
+        'jQuery.fn': ['camera', 'cameraPause', 'cameraResume', 'cameraStop']
       }
     });
     ds.push({
@@ -177,6 +191,9 @@ exports.evaluator = function (win) {
         return {
           'url': 'https://github.com/vitch/jScrollPane/'
         };
+      },
+      provides: {
+        'jQuery.fn': ['jScrollPane']
       }
     });
     ds.push({
@@ -199,6 +216,9 @@ exports.evaluator = function (win) {
         return {
           'url': 'https://github.com/brandonaaron/jquery-mousewheel/'
         };
+      },
+      provides: {
+        'jQuery.fn': ['mousewheel', 'unmousewheel']
       }
     });
     ds.push({
@@ -824,7 +844,12 @@ exports.evaluator = function (win) {
             return 'provides' in d && dk in d.provides;
           }).forEach(function (d) {
             ts = ts.map(function (t) {
-              return d.provides[dk].indexOf(t) !== -1 ? t = '*' + t : t;
+              var tt = t.replace(/(:.+)*$/, '');
+              if ( d.provides[dk].indexOf(tt) !== -1 ) {
+                return t + ( t !== tt ? ',' : ':' ) + d.name;
+              }else{
+                return t;
+              }
             });
           });
         }

@@ -140,8 +140,8 @@ describe('plugin jquery-related detector', function () {
         extras: [{
           'ver': '2.0.3',
           'key': 'jQuery',
-          'jQuery': ['prettyPhoto'],
-          'fn': ['prettyPhoto']
+          'jQuery': ['prettyPhoto:prettyPhoto'],
+          'fn': ['prettyPhoto:prettyPhoto']
         }]
       }, ee = expect.extras,
         actual = plugin.evaluator(window),
