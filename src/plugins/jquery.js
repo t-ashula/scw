@@ -42,12 +42,16 @@ exports.evaluator = function (win) {
       win = window;
     }
 
-    j = win.__wmapper && win.__wmapper.jqs && win.__wmapper.jqs.map(function (q) {
+    j = win.__wmapper && win.__wmapper.jqs && win.__wmapper.jqs.filter(function (q) {
+      return q !== undef && q.fn !== undef;
+    }).map(function (q) {
       return q.fn.jquery;
     }) || [];
 
     if (j.length > 0) {
-      win.__wmapper.jqs.forEach(function (q) {
+      win.__wmapper.jqs.filter(function (q) {
+        return q !== undef && q.fn !== undef;
+      }).forEach(function (q) {
         win['__wmapper_' + q.fn.jquery] = q;
       });
     }
@@ -61,7 +65,9 @@ exports.evaluator = function (win) {
     };
 
     if (j.length > 0) {
-      win.__wmapper.jqs.forEach(function (q) {
+      win.__wmapper.jqs.filter(function (q) {
+        return q !== undef && q.fn !== undef;
+      }).forEach(function (q) {
         delete win['__wmapper_' + q.fn.jquery];
       });
     }
@@ -214,7 +220,8 @@ exports.evaluator = function (win) {
       },
       info: function ($) {
         return {
-          'url': 'https://github.com/brandonaaron/jquery-mousewheel/'
+          'url': 'https://github.com/brandonaaron/jquery-mousewheel/',
+          'version': $.event.special.mousewheel ? $.event.special.mousewheel.version : 'N/A'
         };
       },
       provides: {
@@ -231,6 +238,10 @@ exports.evaluator = function (win) {
           'url': 'http://jqueryui.com/',
           'version': $.ui.version
         };
+      },
+      provides: {
+        'jQuery': ['Color', 'Widget', 'datepicker', 'effects', 'position', 'ui', 'widget'],
+        'jQuery.fn': ['accordion', 'autocomplete', 'button', 'buttonset', 'cssUnit', 'datepicker', 'dialog', 'disableSelection', 'draggable', 'droppable', 'effect', 'enableSelection', 'menu', 'mouse', 'progressbar', 'removeUniqueId', 'resizable', 'scrollParent', 'selectable', 'slider', 'sortable', 'spinner', 'switchClass', 'tabs', 'tooltip', 'uniqueId', 'zIndex']
       }
     });
     ds.push({
@@ -845,9 +856,10 @@ exports.evaluator = function (win) {
           }).forEach(function (d) {
             ts = ts.map(function (t) {
               var tt = t.replace(/(:.+)*$/, '');
-              if ( d.provides[dk].indexOf(tt) !== -1 ) {
-                return t + ( t !== tt ? ',' : ':' ) + d.name;
-              }else{
+              if (d.provides[dk].indexOf(tt) !== -1) {
+                return t + (t !== tt ? ',' : ':') + d.name;
+              }
+              else {
                 return t;
               }
             });
