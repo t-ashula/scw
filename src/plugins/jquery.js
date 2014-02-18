@@ -397,6 +397,49 @@ exports.evaluator = function (win) {
         'jQuery': ['jatt']
       }
     });
+    ds.push({
+      name: 'jQuery Social Button',
+      test: function ($) {
+        return 'socialbutton' in $.fn;
+      },
+      info: function ($) {
+        return {
+          'url': 'http://itra.jp/jquery_socialbutton_plugin/'
+        };
+      },
+      provides: {
+        'jQuery.fn': ['cosialbutton']
+      }
+    });
+    ds.push({
+      name: 'jQuery pjax',
+      test: function ($) {
+        return 'pjax' in $ && 'pjax' in $.fn;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/defunkt/jquery-pjax'
+        };
+      },
+      provides: {
+        'jQuery': ['pjax'],
+        'jQuery.fn': ['pjax']
+      }
+    });
+    ds.push({
+      name: 'jQuery bottom',
+      test: function ($) {
+        return 'bottom' in $.fn;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/jimyi/jquery_bottom'
+        };
+      },
+      provides: {
+        'jQuery.fn': ['bottom']
+      }
+    });
 
     return ds;
   }
