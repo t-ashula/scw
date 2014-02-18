@@ -205,7 +205,12 @@ exports.evaluator = function (win) {
     ds.push({
       name: 'jQuery Easing',
       test: function ($) {
-        return 'easing' in $ && 'def' in $.easing && 'jswing' in $.easing;
+        if ('easing' in $) {
+          return Object.keys($.easing).some(function (k) {
+            return k !== 'linear' && k !== 'swing';
+          });
+        }
+        return false;
       },
       info: function ($) {
         return {
@@ -333,6 +338,63 @@ exports.evaluator = function (win) {
         return {
           'url': 'https://github.com/peachananr/fly_sidemenu'
         };
+      }
+    });
+    ds.push({
+      name: 'AnythingSlider',
+      test: function ($) {
+        return 'anythingSlider' in $ && 'anythingSlider' in $.fn;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/CSS-Tricks/AnythingSlider'
+        };
+      },
+      provides: {
+        'jQuery': ['anythingSlider'],
+        'jQuery.fn': ['anythingSlider']
+      }
+    });
+    ds.push({
+      name: 'AnythingSlider Video Controller',
+      test: function ($) {
+        return 'anythingSliderVideo' in $.fn;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/CSS-Tricks/AnythingSlider'
+        };
+      },
+      provides: {
+        'jQuery.fn': ['anythingSliderVideo']
+      }
+    });
+    ds.push({
+      name: 'AnythingSlider Fx',
+      test: function ($) {
+        return 'anythingSliderFx' in $.fn;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/CSS-Tricks/AnythingSlider'
+        };
+      },
+      provides: {
+        'jQuery.fn': ['anythingSliderFx']
+      }
+    });
+    ds.push({
+      name: 'Just Another ToolTip',
+      test: function ($) {
+        return 'jatt' in $;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/Mottie/Jatt'
+        };
+      },
+      provides: {
+        'jQuery': ['jatt']
       }
     });
 
