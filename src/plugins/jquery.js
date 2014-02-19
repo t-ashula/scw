@@ -408,7 +408,7 @@ exports.evaluator = function (win) {
         };
       },
       provides: {
-        'jQuery.fn': ['cosialbutton']
+        'jQuery.fn': ['socialbutton']
       }
     });
     ds.push({
