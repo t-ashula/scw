@@ -190,6 +190,7 @@ WMapper.prototype.run = function (url) {
   post = [
 
     function evaluated(res, last) {
+      res.url = wm.url;
       last(null, res);
     }
   ];
