@@ -4,9 +4,9 @@
   "private": true,
   "dependencies": {
     "commander": "~2.1.0",
-    "phantomjs": "~1.9.2-6",
+    "phantomjs": "*",
     "async": "~0.2.9",
-    "node-phantom": "~0.2.5"
+    "node-phantom": "git://github.com/t-ashula/node-phantom.git"
   },
   "devDependencies": {
     "grunt-cli": "*",
