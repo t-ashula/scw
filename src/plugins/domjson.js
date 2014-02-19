@@ -2,7 +2,7 @@
 
 exports.name = 'domjson';
 exports.desc = 'dom to json';
-exports.evaluator = function(){
+exports.evaluator = function () {
   'use strict';
   var d;
   try {
@@ -148,7 +148,7 @@ exports.evaluator = function(){
             ele[STYLE][i] = style.getPropertyValue(i);
           });
           if ((ats = getAttrs(E)) && ats.length !== 0) {
-            ele[ATTR] = getAttrs(E);
+            ele[ATTR] = ats;
           }
 
           if (cs && cs.length !== 0) {
@@ -182,8 +182,8 @@ exports.evaluator = function(){
         })(E);
         break;
       }
-      return ele;
 
+      return ele;
     }
 
     function getText(E) {
@@ -198,10 +198,11 @@ exports.evaluator = function(){
       for (i = 0;
         (attr = attrs[i]); ++i) {
         name = attr.name;
-        val = E.getAttribute(name);
+        val = attr.value;
         if (isUriAttribute(tag, name)) {
           val = getAbsUrl(name, val);
         }
+
         ret.push({
           'name': name,
           'val': val
