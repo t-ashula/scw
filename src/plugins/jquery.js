@@ -250,6 +250,20 @@ exports.evaluator = function (win) {
       }
     });
     ds.push({
+      name: 'jQuery Color',
+      test: function ($) {
+        return 'Color' in $;
+      },
+      info: function ($) {
+        return {
+          'url': 'https://github.com/jquery/jquery-color/'
+        };
+      },
+      provides: {
+        'jQuery': ['Color']
+      }
+    });
+    ds.push({
       name: 'jQuery Alert Dialog',
       test: function ($) {
         return 'alerts' in $ && typeof $.alerts === 'object';
