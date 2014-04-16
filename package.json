@@ -1,7 +1,13 @@
 {
   "name": "wmapper",
   "version": "0.0.1",
-  "private": true,
+  "main" : "./src/wmapper.js",
+    "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://t-ashula.mit-license.org/"
+    }
+  ],
   "dependencies": {
     "commander": "~2.1.0",
     "phantomjs": "*",
@@ -10,8 +16,8 @@
   },
   "devDependencies": {
     "grunt-cli": "*",
-    "power-assert": "0.2.x",
-    "grunt-espower": "0.2.x",
+    "power-assert": "*",
+    "grunt-espower": "*",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-jshint": "~0.7.2",
     "grunt-simple-mocha": "~0.4.0",
