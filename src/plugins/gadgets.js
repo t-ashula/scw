@@ -34,6 +34,19 @@ exports.evaluator = function (win) {
         return {};
       }
     });
+    ds.push({
+      'name': 'hatenabookmark',
+      'test': function (w) {
+        function _e(q) {
+          return w.document.querySelector(q) !== null;
+        }
+        return _e('iframe[class="hatena-bookmark-button-frame"]') || _e('script[src$="//b.st-hatena.com/js/bookmark_button.js"]');
+      },
+      'info': function (w) {
+        return {
+        };
+      }
+    });
     return ds;
   }
 
