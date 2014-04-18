@@ -7,7 +7,6 @@ exports = module.exports = WMapper;
 var phantomPath = require('phantomjs').path,
   phantom = require('node-phantom'),
   async = require('async'),
-  sync = require('synchronize'),
   path = require('path'),
   fs = require('fs');
 
