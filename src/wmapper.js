@@ -7,6 +7,7 @@ exports = module.exports = WMapper;
 var phantomPath = require('phantomjs').path,
   phantom = require('node-phantom'),
   async = require('async'),
+  sync = require('synchronize'),
   path = require('path'),
   fs = require('fs');
 
@@ -107,6 +108,15 @@ WMapper.prototype.loglevel = function (level) {
 };
 
 WMapper.prototype.run = function (url) {
+  var wm = this;
+  wm.result = void 0;
+  wm.runAsync(url, function (err, res) {
+    return wm.output(res);
+  });
+  console.log('run:out');
+};
+
+WMapper.prototype.runAsync = function (url, last) {
   var wm = this,
     plan = [],
     pre = [],
@@ -196,7 +206,6 @@ WMapper.prototype.run = function (url) {
   ];
 
   plan = [].concat(pre).concat(evfs).concat(post);
-
   async.waterfall(plan, function (err, res) {
     if (err) {
       console.log('E:run:err:' + err);
@@ -205,13 +214,14 @@ WMapper.prototype.run = function (url) {
       wm.ph.exit();
     }
     wm.result = res;
-    wm.output();
+    last(err, res);
   });
 };
 
 WMapper.prototype.output = function (res) {
   var wm = this,
     ret;
+  console.log('output');
   if (!res) {
     res = wm.result;
   }
