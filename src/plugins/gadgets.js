@@ -7,7 +7,7 @@ exports.evaluator = function (win) {
   var d, r, j, cands,
     undef = void 0;
   try {
-    if (win === void 0) {
+    if (win === undef) {
       win = window;
     }
 
@@ -43,8 +43,7 @@ exports.evaluator = function (win) {
         return _e('iframe[class="hatena-bookmark-button-frame"]') || _e('script[src$="//b.st-hatena.com/js/bookmark_button.js"]');
       },
       'info': function (w) {
-        return {
-        };
+        return {};
       }
     });
     return ds;

@@ -34,7 +34,8 @@ module.exports = function (grunt) {
           console: false,
           'it': false,
           'after': false,
-          'before': false
+          'before': false,
+          'beforeEach':false
         }
       }
     },

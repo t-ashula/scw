@@ -110,9 +110,14 @@ WMapper.prototype.run = function (url) {
   var wm = this;
   wm.result = void 0;
   wm.runAsync(url, function (err, res) {
-    return wm.output(res);
+    if (err) {
+      wm.result = err;
+    }
+    else {
+      wm.result = res;
+    }
+    wm.output();
   });
-  console.log('run:out');
 };
 
 WMapper.prototype.runAsync = function (url, last) {
@@ -135,7 +140,6 @@ WMapper.prototype.runAsync = function (url, last) {
   wm.ph = wm.page = null;
 
   pre = [
-
     function create(next) {
       phantom.create(function (err, ph) {
         next(null, ph);
@@ -220,7 +224,6 @@ WMapper.prototype.runAsync = function (url, last) {
 WMapper.prototype.output = function (res) {
   var wm = this,
     ret;
-  console.log('output');
   if (!res) {
     res = wm.result;
   }
@@ -275,3 +278,4 @@ WMapper.prototype.enablePlugin = function (pname) {
   var wm = this;
   return wm._changePluginState(pname, true);
 };
+

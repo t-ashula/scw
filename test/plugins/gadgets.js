@@ -37,15 +37,51 @@ describe('plugin gadgets detector', function () {
   });
 
   describe('evaluator', function () {
-    it('returns object', function (done) {
-      var window = {
+    var window;
+    beforeEach(function() {
+      window = {
+        document: {
+          querySelector: function () {
+            return null;
+          }
+        }
       };
+    });
+    it('returns object', function (done) {
       var expect = {
-        'gadgets' : []
-      },
+          'gadgets': []
+        },
         actual = plugin.evaluator(window),
         message = 'plugin.evaluator ret no gadgets';
       assert.deepEqual(actual, expect, message);
+      done();
+    });
+    it('detect s_code', function (done) {
+      window.s_code = {};
+      var expect = {
+          'gadgets': [{
+            name: 's_code',
+            info: {}
+          }]
+        },
+        actual = plugin.evaluator(window),
+        message = 'plugin.evaluator detect s_code';
+      assert.deepEqual(actual.gadgets, expect.gadgets, message);
+      done();
+    });
+    it('detect hatebu', function (done) {
+      window.document.querySelector = function () {
+        return true;
+      };
+      var expect = {
+          'gadgets': [{
+            name: 'hatenabookmark',
+            info: {}
+          }]
+        },
+        actual = plugin.evaluator(window),
+        message = 'plugin.evaluator detect hatena-bookmark';
+      assert.deepEqual(actual.gadgets, expect.gadgets, message);
       done();
     });
   });
